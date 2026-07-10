@@ -1,0 +1,25 @@
+@reference "../../../../app/globals.css";
+
+.form {
+  @apply mx-auto flex w-full max-w-md flex-col gap-4 rounded-xl bg-white p-8 shadow-lg;
+}
+
+.title {
+  @apply mb-4 text-center text-2xl font-bold text-gray-800;
+}
+
+.input {
+  @apply w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 outline-none transition;
+}
+
+.input:focus {
+  @apply border-indigo-500 ring-2 ring-indigo-200;
+}
+
+.error {
+  @apply mt-1 text-sm text-red-500;
+}
+
+.button {
+  @apply mt-4 rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white transition hover:bg-indigo-700 disabled:opacity-50;
+}

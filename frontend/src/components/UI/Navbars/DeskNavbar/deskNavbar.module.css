@@ -1,0 +1,83 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  alignitems: center;
+  padding: 1rem 2rem;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navLink {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.loggedInContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.welcomeText {
+  color: #4ade80; /* Verde brillante */
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.username {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.authButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.loginBtn {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.loginBtn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.registerBtn {
+  background-color: #2563eb; /* Blu */
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.registerBtn:hover {
+  background-color: #1d4ed8;
+}
+
+.logoutBtn {
+  background-color: #ef4444; /* Rosso */
+  color: #ffffff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background-color: #dc2626;
+}
