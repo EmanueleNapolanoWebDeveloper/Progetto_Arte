@@ -27,18 +27,7 @@ class RegisterRequest extends FormRequest
             'name' => ['required', 'string', 'min:3', 'max:100'],
             'username' => ['required', 'string', 'min:3', 'max:50', 'alpha_dash', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => [
-                'required',
-                'confirmed',
-                'password' => [
-                    'required',
-                    'confirmed',
-                    'string',
-                    'min:8',
-                    'regex:/[A-Z]/', // Richiede almeno una maiuscola
-                    'regex:/[0-9]/', // Richiede almeno un numero
-                ],
-            ],
+            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
         ];
     }
 
@@ -69,10 +58,9 @@ class RegisterRequest extends FormRequest
             // Messaggi per il campo: password
             'password.required' => "La password è obbligatoria.",
             'password.confirmed' => "Le password inserite non corrispondono.",
-            'password.string' => "La password deve essere una stringa di testo valida.",
             'password.min' => "La password deve essere lunga almeno 8 caratteri.",
-            // Aggiornati i file delle chiavi dei messaggi per mappare le regex
-            'password.regex' => "La password deve contenere almeno una lettera maiuscola e almeno un numero.",
+            'password.mixed_case' => "La password deve contenere almeno una lettera maiuscola e una minuscola.",
+            'password.numbers' => "La password deve contenere almeno un numero.",
         ];
     }
 }

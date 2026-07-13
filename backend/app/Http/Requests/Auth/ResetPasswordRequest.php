@@ -25,28 +25,36 @@ class ResetPasswordRequest extends FormRequest
     {
         return [
             'token' => ['required', 'string'],
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'password' => [
+                'required',
+                'confirmed',
+                'string',
+                'min:8',
+                'regex:/[A-Z]/', // Richiede almeno una maiuscola
+                'regex:/[0-9]/', // Richiede almeno un numero
+            ],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'token.required' => 'Il token di recupero è obbligatorio.',
-            'token.string' => 'Il token di recupero non è in un formato valido.',
+            // Messaggi per il campo: token
+            'token.required' => "Il token di recupero è obbligatorio.",
+            'token.string' => "Il token di recupero deve essere una stringa valida.",
 
-            'email.required' => 'L\'indirizzo email è obbligatorio.',
-            'email.string' => 'L\'indirizzo email deve essere una stringa.',
-            'email.email' => 'Inserisci un indirizzo email valido.',
-
-            'password.required' => 'La nuova password è obbligatoria.',
-            'password.confirmed' => 'La conferma della password non corrisponde.',
-
-            // Messaggi specifici per l'oggetto Password di Laravel
-            'password.min' => 'La password deve contenere almeno 8 caratteri.',
-            'password.mixed_case' => 'La password deve contenere almeno una lettera maiuscola e una minuscola.',
-            'password.numbers' => 'La password deve contenere almeno un numero.',
+            // Messaggi per il campo: email
+            'email.required' => "L'indirizzo e-mail è obbligatorio.",
+            'email.string' => "L'indirizzo e-mail deve essere un testo valido.",
+            'email.email' => "Inserisci un indirizzo e-mail valido.",
+            'email.max' => "L'indirizzo e-mail è troppo lungo! Massimo 255 caratteri.",
+            'password.required' => "La password è obbligatoria.",
+            'password.confirmed' => "Le password inserite non corrispondono.",
+            'password.string' => "La password deve essere una stringa di testo valida.",
+            'password.min' => "La password deve essere lunga almeno 8 caratteri.",
+            // Aggiornati i file delle chiavi dei messaggi per mappare le regex
+            'password.regex' => "La password deve contenere almeno una lettera maiuscola e almeno un numero.",
         ];
     }
 }
