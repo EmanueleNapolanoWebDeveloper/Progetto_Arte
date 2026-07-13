@@ -7,6 +7,7 @@ import styles from "./loginForm.module.css";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 //TYPES
 import { LoginFormType } from "@/src/types/Auth/Login";
@@ -49,6 +50,8 @@ export default function LoginForm() {
     defaultValues: {
       email: "",
       password: "",
+      rememberMe: false,
+      acceptPrivacy: false,
     },
   });
 
@@ -57,11 +60,7 @@ export default function LoginForm() {
     setApiError(null);
 
     try {
-      console.log("try di login");
-
       const response = await loginUser(data);
-
-      console.log(response.user);
 
       if (response?.user) {
         const user = response.user;
@@ -77,6 +76,7 @@ export default function LoginForm() {
       }
     } catch (error) {
       console.error("Errore durante il login:", error);
+      setApiError("Credenziali non valide. Riprova.");
     }
   }
 
@@ -114,6 +114,31 @@ export default function LoginForm() {
         )}
       </div>
 
+      <div className={styles.checkboxField}>
+        <input id="rememberMe" type="checkbox" {...register("rememberMe")} />
+        <label htmlFor="rememberMe">Ricordami</label>
+      </div>
+
+      <div className={styles.checkboxField}>
+        <input
+          id="acceptPrivacy"
+          type="checkbox"
+          {...register("acceptPrivacy")}
+          aria-invalid={!!errors.acceptPrivacy}
+        />
+        <label htmlFor="acceptPrivacy">
+          Accetto la{" "}
+          <Link href="/privacy-policy" target="_blank">
+            Privacy Policy
+          </Link>
+        </label>
+      </div>
+      {errors.acceptPrivacy && (
+        <p className={styles.error} role="alert">
+          {errors.acceptPrivacy.message}
+        </p>
+      )}
+
       {apiError && (
         <p className={styles.error} role="alert">
           {apiError}
@@ -127,6 +152,10 @@ export default function LoginForm() {
       >
         {isSubmitting ? "Accesso in corso..." : "Accedi"}
       </button>
+
+      <Link href="/forgot-password" className={styles.forgotPasswordLink}>
+        Password dimenticata?
+      </Link>
     </form>
   );
 }

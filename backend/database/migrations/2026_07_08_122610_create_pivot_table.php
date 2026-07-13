@@ -19,7 +19,7 @@ return new class extends Migration {
         // tabella pivot ruoli <-> permessi
         // ==============================
         Schema::create('role_permissions', function (Blueprint $table) {
-            $table->uuid('id')->primary()->defalut(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
             $table->foreignUuid('role_id')->constrained('roles')->cascadeOnDelete();
             $table->foreignUuid('permission_id')->constrained('permissions')->cascadeOnDelete();
             $table->timestamps();

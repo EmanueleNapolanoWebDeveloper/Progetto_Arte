@@ -1,0 +1,38 @@
+@reference "../../../../app/globals.css";
+
+.form {
+  @apply mx-auto flex w-full max-w-md flex-col gap-4 rounded-xl bg-white p-8 shadow-lg;
+}
+
+.title {
+  @apply mb-2 text-center text-2xl font-bold text-gray-800;
+}
+
+.field {
+  @apply flex flex-col gap-1;
+}
+
+.field label {
+  @apply text-sm font-medium text-gray-700;
+}
+
+.input {
+  @apply w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 outline-none transition;
+}
+
+.input:focus {
+  @apply border-indigo-500 ring-2 ring-indigo-200;
+}
+
+/* Modificato l'input in caso di errore di validazione */
+.input[aria-invalid="true"] {
+  @apply border-red-500 ring-red-100 focus:ring-red-200;
+}
+
+.error {
+  @apply mt-1 text-sm text-red-500;
+}
+
+.submitButton {
+  @apply mt-4 rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white transition hover:bg-indigo-700 disabled:opacity-50;
+}
