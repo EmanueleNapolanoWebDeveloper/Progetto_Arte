@@ -1,0 +1,52 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.875rem; /* ~14px */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 1.75rem;
+  border-radius: 10px; /* Bordi arrotondati come da immagine */
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid transparent;
+}
+
+/* Variante: Primario (Nero Antracite in Light, Bianco/Grigio chiaro in Dark) */
+.primary {
+  background-color: var(--color-primary);
+  color: var(--background); /* Contrasto dinamico con lo sfondo di base */
+}
+
+.primary:hover:not(:disabled) {
+  /* Effetto hover usando l'oro antico come accento */
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background-color: transparent;
+}
+
+/* Variante: Secondario (Trasparente con bordo scuro) */
+.secondary {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border-color: var(--color-primary);
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: var(
+    --color-secondary
+  ); /* Avorio Caldo in Light, Grigio scuro in Dark */
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Stato Disabilitato (Usa il colore del testo secondario per un effetto spento) */
+.button:disabled {
+  background-color: var(--color-border);
+  color: var(--color-text-secondary);
+  border-color: transparent;
+  cursor: not-allowed;
+  opacity: 0.6;
+}

@@ -7,11 +7,20 @@ use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/register', [RegisterController::class, 'register']);
-Route::post('/login', LoginController::class);
-Route::post('/verify-email', [RegisterController::class, 'verifyEmail']);
-Route::post('/forgot-password', ForgotPasswordController::class);
-Route::post('/reset-password', ResetPasswordController::class);
+// Rotte di autenticazione
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [RegisterController::class, 'register']);
+    Route::post('/login', LoginController::class);
+    Route::post('/verify-email', [RegisterController::class, 'verifyEmail']);
+    Route::post('/forgot-password', ForgotPasswordController::class);
+    Route::post('/reset-password', ResetPasswordController::class);
+});
 
-Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'user']);
-Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'logout']);
+//Rotte di autenticazione protette
+Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'user']);
+    Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'logout']);
+});
+
+
+

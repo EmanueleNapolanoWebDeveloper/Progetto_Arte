@@ -1,90 +1,76 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { apiFetch, ApiError } from "@/src/lib/API/client";
+import { useState } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { z } from "zod";
 import styles from "./fpform.module.css";
+import { forgotPassword } from "@/src/features/Auth/API/password-managment";
 
-type Status = "idle" | "loading" | "success" | "error";
+// Componenti riutilizzabili
+import Form from "../../UI/Form/Form";
+import Input from "../../UI/Inputs/Input";
+
+// Definizione dello schema Zod locale
+const forgotPasswordSchema = z.object({
+  email: z
+    .string()
+    .min(1, "L'indirizzo email è obbligatorio")
+    .email("Indirizzo email non valido"),
+});
+
+type FPFormData = z.infer<typeof forgotPasswordSchema>;
 
 export default function FPForm() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
-  const [message, setMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!email || status === "loading") return;
+  async function handleForgotPassword(
+    data: FPFormData,
+    formMethods: UseFormReturn<FPFormData>,
+  ) {
+    setSuccessMessage(null);
 
-    setStatus("loading");
-    setMessage("");
+    await forgotPassword(data.email);
 
-    try {
-      // Sostituisci l'endpoint con quello reale del tuo backend Laravel per il forgot-password
-      await apiFetch("/forgot-password", {
-        method: "POST",
-        body: JSON.stringify({ email }),
-      });
-
-      setStatus("success");
-      setMessage(
-        "Se l'indirizzo è registrato, riceverai a breve un link di reset.",
-      );
-      setEmail(""); // Pulisce l'input
-    } catch (err) {
-      setStatus("error");
-      setMessage(
-        err instanceof ApiError
-          ? err.message
-          : "Impossibile connettersi al server. Riprova più tardi.",
-      );
-    }
+    setSuccessMessage(
+      "Se l'indirizzo è registrato, riceverai a breve un link di reset.",
+    );
+    formMethods.setValue("email", "");
   }
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <h1 className={styles.title}>Recupera Password</h1>
+    <Form
+      schema={forgotPasswordSchema}
+      defaultValues={{ email: "" }}
+      onSubmit={handleForgotPassword}
+      submitLabel="Invia link di recupero"
+      className={styles.form}
+    >
+      {({ register, formState: { errors } }) => (
+        <>
+          <h1 className={styles.title}>Recupera Password</h1>
 
-      <p className="text-sm text-gray-500 text-center mb-2 balance-text">
-        Inserisci l&aposemail legata al tuo profilo d&aposartista. Ti invieremo un link
-        sicuro per impostare una nuova password.
-      </p>
+          <p className="text-sm text-gray-500 text-center mb-4 balance-text">
+            Inserisci l&apos;email legata al tuo profilo d&apos;artista. Ti
+            invieremo un link sicuro per impostare una nuova password.
+          </p>
 
-      {/* Messaggi di Stato (Successo o Errore Globale di connessione) */}
-      {message && status !== "error" && (
-        <div className="p-3 text-sm text-emerald-700 bg-emerald-50 rounded-lg border border-emerald-100 text-center">
-          {message}
-        </div>
+          {/* Messaggio di Successo Locale */}
+          {successMessage && (
+            <div className="p-3 mb-4 text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg text-center">
+              {successMessage}
+            </div>
+          )}
+
+          {/* Campo Email gestito nativamente dallo schema Zod */}
+          <Input
+            label="Indirizzo Email"
+            type="email"
+            placeholder="nome@esempio.com"
+            error={errors.email?.message}
+            {...register("email")}
+          />
+        </>
       )}
-
-      <div className={styles.field}>
-        <label htmlFor="email">Indirizzo Email</label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          placeholder="nome@esempio.com"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={status === "loading" || status === "success"}
-          className={styles.input}
-          // Si attiva se c'è un errore, triggerando il CSS `.input[aria-invalid="true"]`
-          aria-invalid={status === "error"}
-        />
-        {status === "error" && (
-          <span className={styles.error} role="alert">
-            {message}
-          </span>
-        )}
-      </div>
-
-      <button
-        type="submit"
-        disabled={status === "loading" || !email}
-        className={styles.submitButton}
-      >
-        {status === "loading" ? "Invio in corso..." : "Invia link di recupero"}
-      </button>
-    </form>
+    </Form>
   );
 }

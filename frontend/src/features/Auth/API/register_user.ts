@@ -11,7 +11,7 @@ interface RegisterResponse {
 }
 
 export function registerUser(data: RegisterFormType) {
-  return apiFetch<RegisterResponse>("/register", {
+  return apiFetch<RegisterResponse>("/auth/register", {
     method: "POST",
     body: JSON.stringify(data),
   });

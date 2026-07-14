@@ -6,7 +6,7 @@ interface VerifyEmailResponse {
 }
 
 export function verifyEmailUser(token: string) {
-  return apiFetch<VerifyEmailResponse>("/verify-email", {
+  return apiFetch<VerifyEmailResponse>("/auth/verify-email", {
     method: "POST",
     body: JSON.stringify({ token }),
   });

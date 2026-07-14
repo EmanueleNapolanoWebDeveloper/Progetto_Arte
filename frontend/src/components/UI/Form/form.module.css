@@ -1,0 +1,38 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.apiError {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  border-radius: 0.5rem;
+  border: 1px solid;
+  color: var(--color-error);
+  background-color: color-mix(
+    in srgb,
+    var(--color-error) 8%,
+    var(--color-surface)
+  );
+  border-color: color-mix(in srgb, var(--color-error) 25%, transparent);
+  animation: fadeInDown 0.25s ease-out;
+}
+
+.submitButton {
+  width: 100%;
+  margin-top: 0.5rem;
+  letter-spacing: 0.02em;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

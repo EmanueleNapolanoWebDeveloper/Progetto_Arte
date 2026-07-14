@@ -1,11 +1,29 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiFetch, ApiError } from "@/src/lib/API/client";
-import styles from "../Login/loginForm.module.css"; // Riutilizziamo lo stesso file di stile dei form
+import { z } from "zod";
+import styles from "../Login/loginForm.module.css";
+import { resetPassword } from "@/src/features/Auth/API/password-managment";
 
-type Status = "idle" | "loading" | "success" | "error";
+// Componenti riutilizzabili
+import Form from "../../UI/Form/Form";
+import Input from "../../UI/Inputs/Input";
+
+// Definizione dello schema Zod locale
+const resetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "La password deve contenere almeno 8 caratteri"),
+    password_confirmation: z.string().min(1, "Conferma la tua password"),
+  })
+  .refine((data) => data.password === data.password_confirmation, {
+    message: "Le due password non corrispondono",
+    path: ["password_confirmation"], // Evidenzia l'errore sul campo di conferma
+  });
+
+type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPasswordForm({
   token,
@@ -15,10 +33,9 @@ export default function ResetPasswordForm({
   email: string | null;
 }) {
   const router = useRouter();
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
-  const [message, setMessage] = useState("");
+
+  // Teniamo questo stato solo per il messaggio di successo, poiché l'errore è gestito dal Form globale
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Se manca il token nell'URL, blocchiamo il form all'inizio
   if (!token || !email) {
@@ -33,115 +50,70 @@ export default function ResetPasswordForm({
     );
   }
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleResetPassword(data: ResetPasswordFormData) {
+    setSuccessMessage(null);
 
-    if (password !== passwordConfirmation) {
-      setStatus("error");
-      setMessage("Le due password non corrispondono.");
-      return;
-    }
+    await resetPassword({
+      token: token!,
+      email: email!,
+      password: data.password,
+      password_confirmation: data.password_confirmation,
+    });
 
-    if (status === "loading") return;
+    setSuccessMessage(
+      "Password aggiornata con successo! Verrai reindirizzato al login...",
+    );
 
-    setStatus("loading");
-    setMessage("");
-
-    try {
-      await apiFetch("/reset-password", {
-        method: "POST",
-        body: JSON.stringify({
-          token,
-          email,
-          password,
-          password_confirmation: passwordConfirmation,
-        }),
-      });
-
-      setStatus("success");
-      setMessage(
-        "Password aggiornata con successo! Verrai reindirizzato al login...",
-      );
-
-      // Reindirizza al login dopo 3 secondi
-      setTimeout(() => {
-        router.push("/login");
-      }, 3000);
-    } catch (err) {
-      setStatus("error");
-      setMessage(
-        err instanceof ApiError
-          ? err.message
-          : "Impossibile completare il reset. Riprova più tardi.",
-      );
-    }
+    setTimeout(() => {
+      router.push("/login");
+    }, 3000);
   }
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <h1 className={styles.title}>Scegli Nuova Password</h1>
+    <Form
+      schema={resetPasswordSchema}
+      defaultValues={{
+        password: "",
+        password_confirmation: "",
+      }}
+      onSubmit={handleResetPassword}
+      submitLabel="Reimposta Password"
+      className={styles.form}
+    >
+      {({ register, formState: { errors } }) => (
+        <>
+          <h1 className={styles.title}>Scegli Nuova Password</h1>
 
-      <p className="text-sm text-gray-500 text-center mb-2 balance-text">
-        Inserisci la tua nuova password d&aposaccesso per il tuo profilo.
-      </p>
+          <p className="text-sm text-gray-500 text-center mb-4 balance-text">
+            Inserisci la tua nuova password d&apos;accesso per il tuo profilo.
+          </p>
 
-      {status === "success" && (
-        <div className="p-3 text-sm text-emerald-700 bg-emerald-50 rounded-lg border border-emerald-100 text-center">
-          {message}
-        </div>
+          {/* Messaggio di Successo Locale */}
+          {successMessage && (
+            <div className="p-3 mb-4 text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg text-center">
+              {successMessage}
+            </div>
+          )}
+
+          {/* Campo Nuova Password */}
+          <Input
+            label="Nuova Password"
+            type="password"
+            placeholder="Minimo 8 caratteri"
+            error={errors.password?.message}
+            {...register("password")}
+          />
+
+          {/* Campo Conferma Password */}
+          <Input
+            label="Conferma Nuova Password"
+            type="password"
+            placeholder="Ripeti la nuova password"
+            error={errors.password_confirmation?.message}
+            {...register("password_confirmation")}
+          />
+        </>
       )}
-
-      {/* Campo Nuova Password */}
-      <div className={styles.field}>
-        <label htmlFor="password">Nuova Password</label>
-        <input
-          id="password"
-          type="password"
-          required
-          minLength={8}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          disabled={status === "loading" || status === "success"}
-          className={styles.input}
-          aria-invalid={
-            status === "error" && message.includes("corrispondono") === false
-          }
-        />
-      </div>
-
-      {/* Campo Conferma Password */}
-      <div className={styles.field}>
-        <label htmlFor="password_confirmation">Conferma Nuova Password</label>
-        <input
-          id="password_confirmation"
-          type="password"
-          required
-          minLength={8}
-          value={passwordConfirmation}
-          onChange={(e) => setPasswordConfirmation(e.target.value)}
-          disabled={status === "loading" || status === "success"}
-          className={styles.input}
-          aria-invalid={status === "error"}
-        />
-        {status === "error" && (
-          <span className={styles.error} role="alert">
-            {message}
-          </span>
-        )}
-      </div>
-
-      <button
-        type="submit"
-        disabled={
-          status === "loading" ||
-          status === "success" ||
-          !password ||
-          !passwordConfirmation
-        }
-        className={styles.submitButton}
-      >
-        {status === "loading" ? "Aggiornamento..." : "Reimposta Password"}
-      </button>
-    </form>
+    </Form>
   );
 }

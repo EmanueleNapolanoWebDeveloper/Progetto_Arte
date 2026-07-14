@@ -1,0 +1,99 @@
+.fieldWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  width: 100%;
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+/* Base per Input e Select */
+.baseInput {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px; /* Angoli leggermente più morbidi come da mockup */
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Stato: Focus (Usa l'Oro Antico dell'Atelier) */
+.baseInput:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+
+/* Cambia colore alla label quando il campo è in focus */
+.fieldWrapper:focus-within .label:not(.labelError) {
+  color: var(--color-accent);
+}
+
+/* Stato: Errore */
+.inputError {
+  border-color: var(--color-error) !important;
+  color: var(--color-error) !important;
+}
+
+.inputError:focus {
+  box-shadow: 0 0 0 1px var(--color-error);
+}
+
+.labelError {
+  color: var(--color-error) !important;
+}
+
+.errorMessage {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-error);
+  margin-top: 0.125rem;
+}
+
+/* Personalizzazione specifica per la Select (Rimuove la freccia nativa per uniformità) */
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b6b63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.1em;
+  padding-right: 2.5rem;
+}
+
+/* Variante orizzontale specifica per le Checkbox */
+.checkboxWrapper {
+  flex-direction: row !important; /* Mette checkbox e label sulla stessa riga */
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+/* Quando l'input dentro il wrapper è una checkbox, resettiamo lo stile del testo */
+.checkboxWrapper .baseInput {
+  width: auto; /* Non prende tutta la larghezza dello schermo */
+  padding: 0;
+  accent-color: var(
+    --color-accent
+  ); /* Colora la spunta interna di Oro Antico nei browser moderni */
+  cursor: pointer;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+/* Sposta la label a destra e toglie il margine superiore */
+.checkboxWrapper .label {
+  margin: 0;
+  order: 2; /* Forza la label ad andare dopo l'input */
+  cursor: pointer;
+}
