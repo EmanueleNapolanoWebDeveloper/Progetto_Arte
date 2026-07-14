@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class LoginHistory extends Model
 {
@@ -24,6 +25,20 @@ class LoginHistory extends Model
         return [
             'created_at' => 'datetime'
         ];
+    }
+
+    /**
+     * Boot del modello: genera automaticamente l'UUID prima della creazione.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) Str::uuid(); // Genera un UUID v4 standard di Laravel
+            }
+        });
     }
 
 

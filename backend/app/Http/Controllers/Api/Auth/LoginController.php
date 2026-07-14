@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Actions\Auth\AuthenticateUserAction;
+use App\Exceptions\AuthenticationException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\JsonResponse;
@@ -11,26 +13,23 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    public function __invoke(LoginRequest $request): JsonResponse 
-    {
+    public function __invoke(
+        LoginRequest $request,
+        AuthenticateUserAction $authenticateUser,
+    ): JsonResponse {
         //--->validazione dati
         $credentials = $request->validated();
 
         //--->tentativo di autenticazione (con flag rememberme)
-
-        //-> ERRORRE: LANCIA ERRORE VALIDAZIONE
-        if(!Auth::attempt(
-            $credentials,
-            $request->boolean('remember')
-        )) {
+        try {
+            $user = $authenticateUser->execute($request);
+        } catch (AuthenticationException $e) {
             throw ValidationException::withMessages([
-                'email' => ['Le credenziali fornite non sono corrette'],
+                'email' => [$e->getMessage()],
             ]);
         }
 
-        $request->session()->regenerate();
-        $user = Auth::user();
-
+        //risposta di successo
         return response()->json([
             'user' => [
                 'id' => (string) $user->id,
