@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Auth;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 class LoginHistory extends Model
 {
     use HasFactory, HasUuids;
+
+    const UPDATED_AT = null;
 
     protected $fillable = [
         'user_id',

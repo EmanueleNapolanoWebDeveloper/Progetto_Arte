@@ -2,7 +2,7 @@
 
 namespace App\Services\Auth;
 
-use App\Models\LoginHistory;
+use App\Models\Auth\LoginHistory;
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
 

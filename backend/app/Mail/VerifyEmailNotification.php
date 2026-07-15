@@ -11,18 +11,22 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VerifyEmailNotification extends Mailable
+class VerifyEmailNotification extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+
+    public $tries = 3;
+    public $backoff = [60, 300, 900];
+
 
     /**
      * Create a new message instance.
      */
     public function __construct(
-          public User $user,
+        public User $user,
         public string $token,
-    )
-    {}
+    ) {
+    }
 
     /**
      * Get the message envelope.
@@ -40,9 +44,9 @@ class VerifyEmailNotification extends Mailable
     public function content(): Content
     {
 
-    //link che punta al frontend passando per il token
-    $verificationUrl = config('app.frontend_url', env('NEXT_PUBLIC_FRONTEND_URL'))
-    . '/verify-email?token=' . $this->token;
+        //link che punta al frontend passando per il token
+        $verificationUrl = config('app.frontend_url')
+            . '/verify-email?token=' . $this->token;
 
         return new Content(
             view: 'emails.verify-email',

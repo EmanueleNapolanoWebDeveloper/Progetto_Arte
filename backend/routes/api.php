@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Route;
 
 // Rotte di autenticazione
 Route::prefix('auth')->group(function () {
-    Route::post('/register', [RegisterController::class, 'register']);
+    Route::post('/register', [RegisterController::class, 'register'])->middleware('throttle:register');
     Route::post('/login', LoginController::class);
-    Route::post('/verify-email', [RegisterController::class, 'verifyEmail']);
+    Route::post('/verify-email', [RegisterController::class, 'verifyEmail'])->middleware('throttle:verify_email');
     Route::post('/forgot-password', ForgotPasswordController::class);
     Route::post('/reset-password', ResetPasswordController::class);
 });

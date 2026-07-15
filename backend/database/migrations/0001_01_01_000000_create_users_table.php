@@ -61,7 +61,7 @@ return new class extends Migration {
         // ==============================
         // tabella storico dei login
         // ==============================
-        Schema::create('login_history', function (Blueprint $table) {
+        Schema::create('login_histories', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
             $table->foreignUuid('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('email_attempted')->nullable(); // quante volte ha avuto accesso conquesta mail

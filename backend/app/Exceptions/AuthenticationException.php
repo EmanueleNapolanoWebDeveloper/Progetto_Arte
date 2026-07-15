@@ -23,7 +23,7 @@ class AuthenticationException extends Exception
     public static function invalidCredentials(): self
     {
         return new self(
-            'Le credentiali fornite non sono corrette.',
+            'Le credenziali fornite non sono corrette.',
             Response::HTTP_UNPROCESSABLE_ENTITY,
             [
                 'email' => [

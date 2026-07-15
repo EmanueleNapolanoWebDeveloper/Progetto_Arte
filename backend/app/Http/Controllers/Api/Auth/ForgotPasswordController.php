@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ResetPasswordNotification;
+use App\Models\Auth\PasswordResetTokens;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,14 +36,13 @@ class ForgotPasswordController extends Controller
             $tokenHash = hash('sha256', $plainToken);
 
             //invalida token precedenti ancora validid
-            DB::table('password_reset_tokens')
-                ->where('user_id', $user->id)
+            PasswordResetTokens::where('user_id', $user->id)
                 ->whereNull('used_at')
                 ->update(['used_at' => now()]);
 
             //inserisci nuovo token valido
-            DB::table('password_reset_tokens')->insert([
-                'id' => DB::raw('gen_random_uuid()'),
+            PasswordResetTokens::create([
+                'id' => (string) Str::uuid(),
                 'user_id' => $user->id,
                 'token_hash' => $tokenHash,
                 'expires_at' => now()->addHour(), // scadenza dopo 1 ora

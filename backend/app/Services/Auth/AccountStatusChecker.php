@@ -2,10 +2,10 @@
 namespace App\Services\Auth;
 
 use App\Exceptions\AuthenticationException;
-use App\Models\LoginHistory;
+use App\Models\Auth\LoginHistory;
 use App\Models\User;
-use App\Models\UserBan;
-use App\Models\UserSuspension;
+use App\Models\Auth\UserBan;
+use App\Models\Auth\UserSuspension;
 
 class AccountStatusChecker
 {
@@ -29,7 +29,7 @@ class AccountStatusChecker
         if ($activeBan) {
             LoginHistory::insert([
                 'user_id' => $user->id,
-                'email_attempt' => $email,
+                'email_attempted' => $email,
                 'ip_address' => $ip ?? '0.0.0.0',
                 'status' => 'banned',
                 'user_agent' => $userAgent,
@@ -47,7 +47,7 @@ class AccountStatusChecker
         if ($activeSuspension) {
             LoginHistory::insert([
                 'user_id' => $user->id,
-                'email_attempt' => $email,
+                'email_attempted' => $email,
                 'ip_address' => $ip ?? '0.0.0.0',
                 'status' => 'suspended',
                 'user_agent' => $userAgent,
@@ -60,7 +60,7 @@ class AccountStatusChecker
         if ($user->locked_until && $user->locked_until->isFuture()) {
             LoginHistory::insert([
                 'user_id' => $user->id,
-                'email_attempt' => $email,
+                'email_attempted' => $email,
                 'ip_address' => $ip ?? '0.0.0.0',
                 'status' => 'locked',
                 'user_agent' => $userAgent,

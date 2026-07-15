@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Models\Auth\PasswordResetTokens;
 use App\Models\User;
-use Hash;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class ResetPasswordController extends Controller
 {
@@ -30,15 +31,16 @@ class ResetPasswordController extends Controller
                 ];
             }
 
-            $candidates = DB::table('password_reset_tokens')
-                ->where('user_id', $user->id)
+            $candidates = PasswordResetTokens::where('user_id', $user->id)
                 ->whereNull('used_at')
                 ->orderByDesc('created_at')
                 ->get();
 
             //ricerca token reset-password
             $resetRecord = $candidates->first(
-                fn($record) => Hash::check($validated['token'], $record->token_hash)
+                function ($record) use ($validated) {
+                    return hash_equals($record->token_hash, hash('sha256', $validated['token']));
+                }
             );
 
             //----->GUARDS
@@ -56,8 +58,7 @@ class ResetPasswordController extends Controller
             if (now()->greaterThan($resetRecord->expires_at)) {
 
                 //puliamo token scaduto
-                DB::table('password_reset_tokens')
-                    ->where('id', $resetRecord->id)
+                PasswordResetTokens::where('id', $resetRecord->id)
                     ->update([
                         'used_at' => now(),
                     ]);
@@ -71,7 +72,7 @@ class ResetPasswordController extends Controller
 
             //TOEKN VALIDO - AGGIORNA PASSWORD
             $user->update([
-                'password' => $validated['password']
+                'password' => Hash::make($validated['password'])
             ]);
 
             //INVALIDAZIONI SESSIONE ATTIVE
@@ -83,8 +84,7 @@ class ResetPasswordController extends Controller
             $user->tokens()->delete();
 
             //eliminazione token usato
-            DB::table('password_reset_tokens')
-                ->where('user_id', $user->id)
+            PasswordResetTokens::where('user_id', $user->id)
                 ->whereNull('used_at')
                 ->update([
                     'used_at' => now()

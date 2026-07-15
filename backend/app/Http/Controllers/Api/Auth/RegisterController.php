@@ -7,8 +7,8 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\VerifyEmailRequest;
 use App\Http\Resources\UserResources;
 use App\Mail\VerifyEmailNotification;
+use App\Models\Auth\EmailVerificationToken;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -31,6 +31,7 @@ class RegisterController extends Controller
                 'username' => $validated['username'],
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
+                'status' => 'pending',
             ]);
 
             //generazione token
@@ -38,8 +39,8 @@ class RegisterController extends Controller
             $tokenHash = hash('sha256', $token);
 
             //salva token in db email_verification_token
-            DB::table('email_verification_tokens')->insert([
-                'id' => DB::raw('gen_random_uuid()'),
+            EmailVerificationToken::create([
+                'id' => (string) Str::uuid(),
                 'user_id' => $user->id,
                 'token_hash' => $tokenHash,
                 'expires_at' => now()->addHours(24), // token valido per un giorno
@@ -75,6 +76,7 @@ class RegisterController extends Controller
             //recupero token
             $storedToken = DB::table('email_verification_tokens')
                 ->where('token_hash', $tokenHash)
+                ->lockForUpdate()
                 ->first();
 
 
@@ -119,6 +121,15 @@ class RegisterController extends Controller
                 ];
             }
 
+            //se email_verified è !== da null procedi lo stesso (nel caso utente abbia aperto 2 link diversi)
+            if ($user->email_verified_at !== null) {
+                // Già verificato in precedenza (es. l'utente ha aperto due
+                // link diversi): trattato come successo idempotente, non errore.
+                return ['success' => true];
+            }
+
+
+            //CONTROLLI SUPERATI - PROCEDIAMO CON UPDATE
             if ($user) {
                 $user->update([
                     'status' => 'active',
@@ -126,10 +137,18 @@ class RegisterController extends Controller
                 ]);
             }
 
+
             //marchiamo token 
-            DB::table('email_verification_tokens')
-                ->where('id', $storedToken->id)
+            EmailVerificationToken::where('id', $storedToken->id)
                 ->update(['used_at' => now()]);
+
+                
+            // Invalidiamo eventuali altri token ancora attivi per lo stesso utente,
+            EmailVerificationToken::where('user_id', $user->id)
+                ->where('id', '!=', $storedToken->id)
+                ->whereNull('used_at')
+                ->update(['used_at' => now()]);
+
 
             return [
                 'success' => true,

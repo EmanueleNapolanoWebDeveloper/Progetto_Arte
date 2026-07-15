@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Auth\LoginHistory;
+use App\Models\User\Role;
+use App\Models\Auth\UserBan;
+use App\Models\Auth\UserSuspension;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +17,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, SoftDeletes,HasUuids;
+    use HasFactory, Notifiable, HasApiTokens, SoftDeletes, HasUuids;
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +31,9 @@ class User extends Authenticatable
         'password',
         'locale',
         'status',
+        'last_login_ip',
+        'last_login_at',
+        'locked_until',
         'email_verified_at'
     ];
 
