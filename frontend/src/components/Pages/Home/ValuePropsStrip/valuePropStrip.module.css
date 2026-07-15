@@ -1,0 +1,37 @@
+@reference "../../../../../app/globals.css";
+
+.section {
+  /* Aggiunto flex per centrare verticalmente, padding (py-10) e i bordi */
+  @apply flex flex-col justify-center bg-[var(--color-secondary)] border-t border-b border-[var(--color-border)] py-10;
+}
+
+.container {
+  @apply max-w-[80rem] mx-auto px-6 md:px-16 w-full;
+}
+
+.grid {
+  @apply grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-6;
+}
+
+.item {
+  @apply flex flex-col items-start gap-2;
+}
+
+.icon {
+  @apply w-5 h-5 text-[var(--color-accent)] transition-colors duration-200 ease-in-out;
+}
+
+/* Gestione dell'hover: quando passi il mouse su .item, l'icona cambia colore */
+.item:hover .icon {
+  @apply text-[var(--color-primary)];
+}
+
+.title {
+  font-family: var(--font-serif);
+  @apply text-[0.9375rem] font-medium text-[var(--color-text-primary)] tracking-[0.01em];
+}
+
+.description {
+  font-family: var(--font-sans);
+  @apply text-[0.8125rem] leading-[1.5] text-[var(--color-text-secondary)];
+}

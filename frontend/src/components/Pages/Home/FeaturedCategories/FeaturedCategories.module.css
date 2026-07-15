@@ -1,0 +1,121 @@
+.section {
+  background-color: var(--background);
+  padding: 4rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 5rem 4rem;
+  }
+}
+
+.header {
+  max-width: 80rem;
+  margin: 0 auto 2.5rem auto;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+}
+
+.grid {
+  max-width: 80rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 220px;
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 260px;
+  }
+}
+
+.cardLarge {
+  grid-column: span 2 / span 2;
+  grid-row: span 2 / span 2;
+}
+
+.cardSmall {
+  grid-column: span 2 / span 2;
+}
+
+@media (min-width: 768px) {
+  .cardSmall {
+    grid-column: span 2 / span 2;
+  }
+}
+
+.card {
+  position: relative;
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 2px;
+  border: 1px solid var(--color-border);
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.card:hover .image {
+  transform: scale(1.04);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(28, 28, 30, 0.75) 0%,
+    rgba(28, 28, 30, 0.15) 50%,
+    rgba(28, 28, 30, 0) 100%
+  );
+}
+
+.content {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 1.5rem;
+}
+
+.cardTitle {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+}
+
+.cardDescription {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.accentLine {
+  width: 2rem;
+  height: 2px;
+  background-color: var(--color-accent);
+  margin-top: 0.75rem;
+  transition: width 0.3s ease;
+}
+
+.card:hover .accentLine {
+  width: 3.5rem;
+}
