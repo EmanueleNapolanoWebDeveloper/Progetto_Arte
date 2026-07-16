@@ -1,0 +1,58 @@
+import { Category } from "@/src/types/Auth/work";
+
+export const categoriesFixtures: Category[] = [
+  {
+    id: "1",
+    slug: "pittura",
+    name: "Pittura",
+    description: "Opere su tela, acrilico e olio di artisti emergenti.",
+    worksCount: 128,
+    imageUrl: "https://picsum.photos/seed/pittura/800/1000",
+    imageAlt: "Dipinto astratto contemporaneo esposto in studio",
+  },
+  {
+    id: "2",
+    slug: "fotografia",
+    name: "Fotografia",
+    description: "Stampe fine art in edizione limitata.",
+    worksCount: 94,
+    imageUrl: "https://picsum.photos/seed/fotografia/800/1000",
+    imageAlt: "Fotografia in bianco e nero di un paesaggio urbano",
+  },
+  {
+    id: "3",
+    slug: "scultura",
+    name: "Scultura",
+    description: "Opere tridimensionali in materiali misti.",
+    worksCount: 41,
+    imageUrl: "https://picsum.photos/seed/scultura/800/1000",
+    imageAlt: "Scultura moderna in bronzo su piedistallo",
+  },
+  {
+    id: "4",
+    slug: "illustrazione",
+    name: "Illustrazione",
+    description: "Illustrazione digitale e disegno contemporaneo.",
+    worksCount: 67,
+    imageUrl: "https://picsum.photos/seed/illustrazione/800/1000",
+    imageAlt: "Illustrazione digitale colorata in stile editoriale",
+  },
+  {
+    id: "5",
+    slug: "ceramica",
+    name: "Ceramica",
+    description: "Ceramica d'autore realizzata a mano.",
+    worksCount: 33,
+    imageUrl: "https://picsum.photos/seed/ceramica/800/1000",
+    imageAlt: "Vaso in ceramica artigianale su sfondo neutro",
+  },
+  {
+    id: "6",
+    slug: "arte-digitale",
+    name: "Arte digitale",
+    description: "Opere generative e digital art.",
+    worksCount: 52,
+    imageUrl: "https://picsum.photos/seed/digitale/800/1000",
+    imageAlt: "Opera di arte digitale generativa dai colori vivaci",
+  },
+];
