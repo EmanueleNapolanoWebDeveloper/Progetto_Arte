@@ -3,69 +3,27 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Factories\RoleFactory;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class RoleSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Popola/aggiorna i ruoli a partire dal catalogo definito
+     * in RoleFactory (unica fonte di verità). Idempotente.
      */
     public function run(): void
     {
-        $roles = [
+        collect(array_keys(RoleFactory::catalog()))
+            ->each(function (string $key): void {
+                $attributes = RoleFactory::attributesFor($key);
 
-            [
-                'name' => 'Super Admin',
-                'slug' => 'super_admin',
-                'description' => 'Full system access',
-                'is_system' => true,
-            ],
+                Role::updateOrCreate(
+                    ['slug' => $attributes['slug']],
+                    $attributes
+                );
+            });
 
-            [
-                'name' => 'Admin',
-                'slug' => 'admin',
-                'description' => 'Administrator',
-                'is_system' => true,
-            ],
-
-            [
-                'name' => 'Moderator',
-                'slug' => 'moderator',
-                'description' => 'Community moderator',
-                'is_system' => true,
-            ],
-
-            [
-                'name' => 'Artist',
-                'slug' => 'artist',
-                'description' => 'Artist account',
-                'is_system' => true,
-            ],
-
-            [
-                'name' => 'Customer',
-                'slug' => 'customer',
-                'description' => 'Customer account',
-                'is_system' => true,
-            ],
-
-        ];
-
-
-        foreach ($roles as $role) {
-
-            Role::updateOrCreate(
-                [
-                    'slug' => $role['slug']
-                ],
-                [
-                    ...$role,
-                    'id' => Str::uuid()
-                ]
-            );
-
-        }
+        $this->command?->info(sprintf('%d ruoli sincronizzati.', count(RoleFactory::catalog())));
     }
 }

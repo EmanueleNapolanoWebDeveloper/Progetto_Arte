@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Auth\LoginHistory;
-use App\Models\User\Role;
+use App\Models\Role;
 use App\Models\Auth\UserBan;
 use App\Models\Auth\UserSuspension;
 use Database\Factories\UserFactory;
