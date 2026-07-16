@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Arte
 
-## Getting Started
+**Arte** è una piattaforma web dedicata alla promozione e alla scoperta di artisti emergenti e opere d'arte. L'applicazione consente agli utenti di registrarsi, esplorare profili artistici e interagire con i contenuti in un ambiente sicuro e protetto.
 
-First, run the development server:
+Il progetto è attualmente in fase di sviluppo: il modulo di autenticazione è stato completato, mentre le restanti funzionalità sono in via di implementazione.
+
+## Installazione
+
+Segui i passaggi seguenti per configurare il progetto in ambiente locale.
+
+### Prerequisiti
+
+- PHP ≥ 8.2
+- Composer
+- Node.js ≥ 18
+- NPM
+- Database (MySQL / PostgreSQL / SQLite)
+- Queue driver (database / Redis)
+
+### Passaggi
+
+1. **Clona il repository**
+
+   ```bash
+   git clone <repository-url>
+   ```
+
+2. **Accedi alla cartella del progetto**
+
+   ```bash
+   cd progetto-arte
+   ```
+
+3. **Configura il backend (Laravel)**
+
+   ```bash
+   cd backend
+   composer install
+   ```
+
+   Copia il file `.env.example` in `.env` e configura le credenziali del database e del servizio di posta elettronica.
+
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+   Esegui le migrazioni del database:
+
+   ```bash
+   php artisan migrate
+   ```
+
+4. **Configura il frontend (Next.js)**
+
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+## Avvio del progetto
+
+Per avviare l'applicazione in locale, avvia i seguenti servizi in terminali separati.
+
+### Frontend
 
 ```bash
+cd frontend
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Il frontend sarà disponibile all'indirizzo `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Backend
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd backend
+php artisan serve
+```
 
-## Learn More
+Il backend sarà disponibile all'indirizzo `http://localhost:8000`.
 
-To learn more about Next.js, take a look at the following resources:
+### Queue worker (invio email)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+cd backend
+php artisan queue:work
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Il queue worker è necessario per processare in modo asincrono l'invio delle email (notifiche di reset password, verifica email, etc.).
 
-## Deploy on Vercel
+## Sistema di autenticazione
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Il modulo di autenticazione gestisce in modo completo la sicurezza degli accessi alla piattaforma. Le funzionalità attualmente implementate includono:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Registrazione utenti** — Creazione di un nuovo account con validazione dei dati in ingresso.
+- **Login e logout** — Accesso e uscita dalla piattaforma tramite API protette.
+- **Gestione sessioni** — Utilizzo di token Sanctum per la gestione sicura delle sessioni.
+- **Recupero password** — Invio di un'email per il reset della password dimenticata.
+- **Reset password** — Reimpostazione della password tramite token temporaneo sicuro.
+- **Verifica email** — Conferma dell'indirizzo email al momento della registrazione tramite link di verifica.
+- **Protezione delle rotte riservate** — Middleware di autenticazione che limita l'accesso alle sole utenti autenticati.
+- **Validazione dei dati in ingresso** — Controllo lato server dei campi inviati tramite form request personalizzate.
+- **Hashing sicuro delle password** — Le password sono protette tramite algoritmo bcrypt.
+- **Protezione CSRF** — Prevenzione degli attacchi cross-site request forgery.
+- **Rate limiting** — Limitazione del numero di richieste su rotte sensibili (registrazione, verifica email).
+- **Invio email** — Notifiche asincrone inviate tramite il sistema Laravel Queue e Mailable per reset password e verifica email.
+- **Controlli di sicurezza aggiuntivi** — Monitoraggio dei tentativi di accesso, verifica dello stato dell'account e gestione di sospensioni e ban.
+
+---
+
+Sviluppato da **Emanuele Napolano**
