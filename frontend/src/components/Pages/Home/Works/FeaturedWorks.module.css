@@ -1,0 +1,127 @@
+@reference "../../../../../app/globals.css";
+
+/* ==========================================================================
+   Section / Header
+   ========================================================================== */
+
+.section {
+  @apply mx-auto max-w-7xl px-6 py-20 sm:py-28 lg:px-8;
+}
+
+.header {
+  @apply flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between;
+}
+
+.eyebrow {
+  @apply text-sm font-medium uppercase tracking-widest text-accent;
+}
+
+.heading {
+  @apply mt-3 font-serif text-3xl text-text-primary sm:text-4xl;
+}
+
+/* ==========================================================================
+   Filter bar
+   ========================================================================== */
+
+.filterGroup {
+  @apply flex flex-wrap gap-2;
+}
+
+.filterButton {
+  @apply rounded-full border border-border px-4 py-2 text-sm text-text-secondary transition-colors duration-200 hover:border-accent hover:text-accent;
+}
+
+.filterButtonActive {
+  @apply rounded-full border border-primary bg-primary px-4 py-2 text-sm text-surface transition-colors duration-200;
+}
+
+/* ==========================================================================
+   Grid
+   ========================================================================== */
+
+.grid {
+  @apply mt-10 grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 lg:grid-cols-4;
+}
+
+/* ==========================================================================
+   Work Card
+   ========================================================================== */
+/*
+  NOTA: .cardArticle va combinata nel JSX con la classe letterale "group"
+  (className={`group ${styles.cardArticle}`}), perché il meccanismo
+  group-hover di Tailwind richiede quella classe letterale come marker
+  nel DOM — @apply non la ricrea sugli elementi discendenti.
+*/
+
+.cardArticle {
+  @apply relative;
+}
+
+.cardLink {
+  @apply block rounded-xl outline-accent focus-visible:outline-2 focus-visible:outline-offset-4;
+}
+
+.cardImageWrapper {
+  @apply relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-secondary;
+}
+
+.cardImage {
+  @apply object-cover transition-transform duration-700 ease-out group-hover:scale-105;
+}
+
+.cardInfo {
+  @apply mt-3 flex items-start justify-between gap-3;
+}
+
+.cardTitle {
+  @apply text-sm font-medium text-text-primary;
+}
+
+.cardArtist {
+  @apply mt-0.5 text-sm text-text-secondary;
+}
+
+.cardPrice {
+  @apply shrink-0 text-sm font-medium text-text-primary;
+}
+
+/* ==========================================================================
+   Card actions (wishlist / save button)
+   ========================================================================== */
+
+.actionButton {
+  @apply absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 text-primary opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100 focus-visible:opacity-100 disabled:cursor-wait;
+}
+
+.actionIcon {
+  @apply h-4 w-4 stroke-current;
+}
+
+.actionIconSaved {
+  @apply fill-accent;
+}
+
+.actionIconIdle {
+  @apply fill-none;
+}
+
+/* ==========================================================================
+   Skeleton
+   ========================================================================== */
+
+.skeletonEyebrow {
+  @apply h-4 w-20 animate-pulse rounded bg-border;
+}
+
+.skeletonHeading {
+  @apply mt-4 h-8 w-96 max-w-full animate-pulse rounded bg-border;
+}
+
+.skeletonGrid {
+  @apply mt-10 grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 lg:grid-cols-4;
+}
+
+.skeletonItem {
+  @apply aspect-[3/4] animate-pulse rounded-xl bg-border;
+}

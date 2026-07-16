@@ -3,12 +3,12 @@
 import { useMemo, useState } from "react";
 import WorkCard from "./WorkCard";
 import { Work } from "@/src/types/Auth/work";
+import styles from "./FeaturedWorks.module.css";
 
 interface FeaturedWorksFilterBarProps {
   works: Work[];
   categories: { slug: string; name: string }[];
 }
-
 
 export default function FeaturedWorksFilterBar({
   works,
@@ -26,7 +26,7 @@ export default function FeaturedWorksFilterBar({
       <div
         role="group"
         aria-label="Filtra opere per categoria"
-        className="flex flex-wrap gap-2"
+        className={styles.filterGroup}
       >
         <FilterButton
           label="Tutte"
@@ -43,7 +43,7 @@ export default function FeaturedWorksFilterBar({
         ))}
       </div>
 
-      <ul className="mt-10 grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
+      <ul className={styles.grid}>
         {filteredWorks.map((work, index) => (
           <WorkCard key={work.id} work={work} priority={index < 4} />
         ))}
@@ -66,11 +66,7 @@ function FilterButton({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded-full border px-4 py-2 text-sm transition-colors duration-200 ${
-        active
-          ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
-          : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
-      }`}
+      className={active ? styles.filterButtonActive : styles.filterButton}
     >
       {label}
     </button>

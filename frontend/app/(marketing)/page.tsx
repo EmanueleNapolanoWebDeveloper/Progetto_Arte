@@ -5,6 +5,8 @@ import ValuePropStrip from "@/src/components/Pages/Home/ValuePropsStrip/ValuePro
 import { Suspense } from "react";
 import FeaturedWorksSkeleton from "../../src/components/Pages/Home/Works/FeaturedWorksSkeleton";
 import FeaturedWorksGrid from "@/src/components/Pages/Home/Works/FeaturedWorksGrid";
+import ArtistSpotlightSkeleton from "@/src/components/Pages/Home/ArtistSpotlight/ArtistSpotlightSkeleton";
+import ArtistSpotlight from "@/src/components/Pages/Home/ArtistSpotlight/ArtistSpotlight";
 
 export default function Home() {
   return (
@@ -19,6 +21,10 @@ export default function Home() {
 
       <Suspense fallback={<FeaturedWorksSkeleton />}>
         <FeaturedWorksGrid />
+      </Suspense>
+
+      <Suspense fallback={<ArtistSpotlightSkeleton />}>
+        <ArtistSpotlight />
       </Suspense>
     </main>
   );

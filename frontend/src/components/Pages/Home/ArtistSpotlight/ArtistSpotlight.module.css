@@ -1,0 +1,105 @@
+@reference "../../../../../app/globals.css";
+
+.section {
+  @apply mx-auto max-w-7xl px-6 py-20 sm:py-28 lg:px-8;
+}
+
+.eyebrow {
+  @apply text-sm font-semibold tracking-wider uppercase text-accent;
+}
+
+.heading {
+  @apply mt-2 font-serif text-3xl text-text-primary sm:text-4xl;
+}
+
+.carouselContainer {
+  @apply relative mt-12;
+}
+
+.carousel {
+  @apply flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-6;
+  scrollbar-width: none; /* Rimuove scrollbar su Firefox */
+}
+
+.carousel::-webkit-scrollbar {
+  @apply hidden; /* Rimuove scrollbar su Chrome/Safari */
+}
+
+.navButton {
+  @apply absolute top-1/2 -translate-y-1/2 hidden md:flex items-center justify-center w-12 h-12 rounded-full border border-border bg-surface text-text-primary hover:bg-secondary hover:border-accent transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent z-10 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-surface disabled:hover:border-border;
+}
+
+.navButtonPrev {
+  @apply -left-6;
+}
+
+.navButtonNext {
+  @apply -right-6;
+}
+
+.card {
+  @apply min-w-[280px] w-[280px] sm:min-w-[340px] sm:w-[340px] shrink-0 snap-start bg-card rounded-lg border border-border overflow-hidden transition-all duration-300 hover:border-accent;
+}
+
+.imageWrapper {
+  @apply relative aspect-[3/4] w-full overflow-hidden bg-secondary;
+}
+
+.featuredImage {
+  @apply object-cover transition-transform duration-500 ease-out;
+}
+
+/*
+  Fix: group-hover: dentro @apply in un CSS Module con @reference è
+  fragile in Tailwind v4 (errore "unknown utility class `group`").
+  Si scrive invece il selettore nativo con :global(.group), e si applica
+  solo la proprietà finale via @apply. La classe letterale "group" va
+  messa nel JSX sull'elemento .card (className={`group ${styles.card}`}).
+*/
+:global(.group):hover .featuredImage {
+  @apply scale-105;
+}
+
+.cardContent {
+  @apply p-6 flex flex-col items-center text-center relative;
+}
+
+.avatarWrapper {
+  @apply relative -mt-16 h-20 w-20 rounded-full border-4 border-card overflow-hidden bg-secondary z-10 shadow-sm;
+}
+
+.avatar {
+  @apply object-cover;
+}
+
+.artistName {
+  @apply mt-4 font-serif text-lg font-medium text-text-primary transition-colors;
+}
+
+:global(.group):hover .artistName {
+  @apply text-accent;
+}
+
+.worksCount {
+  @apply mt-1 text-xs text-text-secondary uppercase tracking-wider;
+}
+
+.bio {
+  @apply mt-3 text-sm text-text-secondary line-clamp-2 h-10 px-2;
+}
+
+.actions {
+  @apply mt-6 w-full pt-4 border-t border-border flex justify-center;
+}
+
+.followButton {
+  @apply w-full py-2.5 px-4 rounded-md text-sm font-medium border transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent;
+}
+
+.followButtonActive {
+  @apply bg-primary text-surface border-primary hover:bg-transparent hover:text-primary hover:border-primary;
+}
+
+.followButtonInactive {
+  @apply bg-transparent text-primary border-primary hover:bg-primary hover:text-surface;
+}

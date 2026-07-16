@@ -1,51 +1,57 @@
-export interface Work {
-  id: string;
-  slug: string;
-  title: string;
-  imageUrl: string;
-  imageAlt: string;
-  price: number;
-  currency: string;
-  categorySlug: string;
-  categoryName: string;
-  artist: {
-    id: string;
-    name: string;
-    slug: string;
-  };
-  isSaved?: boolean;
-}
+// src/lib/mocks/works.mocks.ts
+import { Work } from "@/src/types/Auth/work";
 
-
-const artists = [
-  { id: "a1", name: "Giulia Ferraro", slug: "giulia-ferraro" },
-  { id: "a2", name: "Marco Testa", slug: "marco-testa" },
-  { id: "a3", name: "Elena Conti", slug: "elena-conti" },
-  { id: "a4", name: "Luca Bianchi", slug: "luca-bianchi" },
-];
-
-const categoryBySlug: Record<string, string> = {
-  pittura: "Pittura",
-  fotografia: "Fotografia",
-  scultura: "Scultura",
-  illustrazione: "Illustrazione",
-};
-
-export const worksFixtures: Work[] = Array.from({ length: 12 }, (_, i) => {
-  const categorySlug = Object.keys(categoryBySlug)[i % 4];
-  const artist = artists[i % artists.length];
-
-  return {
-    id: `w${i + 1}`,
-    slug: `opera-${i + 1}`,
-    title: `Opera senza titolo n.${i + 1}`,
-    imageUrl: `https://picsum.photos/seed/opera${i + 1}/600/800`,
-    imageAlt: `Opera d'arte numero ${i + 1} di ${artist.name}`,
-    price: 350 + i * 85,
+export const worksFixtures: Work[] = [
+  {
+    id: "1",
+    slug: "quiete-mattutina",
+    title: "Quiete Mattutina",
+    imageUrl: "/images/works/quiete-mattutina.jpg",
+    imageAlt: "Dipinto astratto di quiete mattutina",
+    categorySlug: "pittura",
+    categoryName: "Pittura",
+    price: 1200,
     currency: "EUR",
-    categorySlug,
-    categoryName: categoryBySlug[categorySlug],
-    artist,
+    artist: { id: "a1", name: "Elena Rossi", slug: "elena-rossi" },
     isSaved: false,
-  };
-});
+  },
+  {
+    id: "2",
+    slug: "forma-liquida",
+    title: "Forma Liquida",
+    imageUrl: "/images/works/forma-liquida.jpg",
+    imageAlt: "Scultura in bronzo",
+    categorySlug: "scultura",
+    categoryName: "Scultura",
+    price: 3400,
+    currency: "EUR",
+    artist: { id: "a2", name: "Marco Bianchi", slug: "marco-bianchi" },
+    isSaved: false,
+  },
+  {
+    id: "3",
+    slug: "strade-di-roma",
+    title: "Strade di Roma",
+    imageUrl: "/images/works/strade-di-roma.jpg",
+    imageAlt: "Fotografia di strada a Roma",
+    categorySlug: "fotografia",
+    categoryName: "Fotografia",
+    price: 850,
+    currency: "EUR",
+    artist: { id: "a3", name: "Giulia Conti", slug: "giulia-conti" },
+    isSaved: true,
+  },
+  {
+    id: "4",
+    slug: "eco-digitale",
+    title: "Eco Digitale",
+    imageUrl: "/images/works/eco-digitale.jpg",
+    imageAlt: "Arte digitale generativa",
+    categorySlug: "digitale",
+    categoryName: "Digitale",
+    price: 600,
+    currency: "EUR",
+    artist: { id: "a4", name: "Sara Neri", slug: "sara-neri" },
+    isSaved: false,
+  },
+];

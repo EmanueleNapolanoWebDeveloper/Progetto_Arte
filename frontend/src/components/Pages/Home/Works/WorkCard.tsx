@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import WorkCardActions from "./WorkCardActions";
 import { Work } from "@/src/types/Auth/work";
+import styles from "./FeaturedWorks.module.css";
 
 interface WorkCardProps {
   work: Work;
@@ -14,32 +15,25 @@ const currencyFormatter = (currency: string) =>
 export default function WorkCard({ work, priority = false }: WorkCardProps) {
   return (
     <li>
-      <article className="group relative">
-        <Link
-          href={`/opere/${work.slug}`}
-          className="block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)]"
-        >
-          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-[var(--color-secondary)]">
+      <article className={styles.cardArticle}>
+        <Link href={`/opere/${work.slug}`} className={styles.cardLink}>
+          <div className={styles.cardImageWrapper}>
             <Image
               src={work.imageUrl}
               alt={work.imageAlt}
               fill
               priority={priority}
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              className={styles.cardImage}
             />
           </div>
 
-          <div className="mt-3 flex items-start justify-between gap-3">
+          <div className={styles.cardInfo}>
             <div>
-              <h3 className="text-sm font-medium text-[var(--color-text-primary)]">
-                {work.title}
-              </h3>
-              <p className="mt-0.5 text-sm text-[var(--color-text-secondary)]">
-                {work.artist.name}
-              </p>
+              <h3 className={styles.cardTitle}>{work.title}</h3>
+              <p className={styles.cardArtist}>{work.artist.name}</p>
             </div>
-            <p className="shrink-0 text-sm font-medium text-[var(--color-text-primary)]">
+            <p className={styles.cardPrice}>
               {currencyFormatter(work.currency).format(work.price)}
             </p>
           </div>

@@ -1,11 +1,17 @@
-import {
-  getFeaturedWorks,
-  extractAvailableCategories,
-} from "@/src/lib/Services/work.categories.service";
+import { worksFixtures } from "@/src/lib/mocks/works.mocks";
 import FeaturedWorksFilterBar from "./FeaturedWorksFilterBar";
+import styles from "./FeaturedWorks.module.css";
 
-export default async function FeaturedWorksGrid() {
-  const works = await getFeaturedWorks();
+function extractAvailableCategories(works: typeof worksFixtures) {
+  const seen = new Map<string, string>();
+  for (const work of works) {
+    seen.set(work.categorySlug, work.categoryName);
+  }
+  return Array.from(seen, ([slug, name]) => ({ slug, name }));
+}
+
+export default function FeaturedWorksGrid() {
+  const works = worksFixtures;
 
   if (works.length === 0) return null;
 
@@ -14,17 +20,12 @@ export default async function FeaturedWorksGrid() {
   return (
     <section
       aria-labelledby="featured-works-heading"
-      className="mx-auto max-w-7xl px-6 py-20 sm:py-28 lg:px-8"
+      className={styles.section}
     >
-      <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+      <header className={styles.header}>
         <div>
-          <p className="text-sm font-medium uppercase tracking-widest text-[var(--color-accent)]">
-            In evidenza
-          </p>
-          <h2
-            id="featured-works-heading"
-            className="mt-3 font-serif text-3xl text-[var(--color-text-primary)] sm:text-4xl"
-          >
+          <p className={styles.eyebrow}>In evidenza</p>
+          <h2 id="featured-works-heading" className={styles.heading}>
             Opere selezionate questa settimana
           </h2>
         </div>
