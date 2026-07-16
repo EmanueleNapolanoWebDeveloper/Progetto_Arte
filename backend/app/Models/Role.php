@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Models\User;
+namespace App\Models;
 
+use App\Models\User;
+use App\Models\Permission;
 use Illuminate\Database\Eloquent\Concerns\HasUniqueIds;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +12,9 @@ class Role extends Model
 {
 
     use HasFactory, HasUniqueIds;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
 
 
     protected $fillable = [

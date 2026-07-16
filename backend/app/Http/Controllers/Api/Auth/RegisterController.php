@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\VerifyEmailRequest;
 use App\Http\Resources\UserResources;
 use App\Mail\VerifyEmailNotification;
 use App\Models\Auth\EmailVerificationToken;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -123,8 +124,6 @@ class RegisterController extends Controller
 
             //se email_verified è !== da null procedi lo stesso (nel caso utente abbia aperto 2 link diversi)
             if ($user->email_verified_at !== null) {
-                // Già verificato in precedenza (es. l'utente ha aperto due
-                // link diversi): trattato come successo idempotente, non errore.
                 return ['success' => true];
             }
 
@@ -137,12 +136,28 @@ class RegisterController extends Controller
                 ]);
             }
 
+            //------>ASSEGNAZIONE RUOLO 'CUSTOMER'
+
+            // recupero ruolo
+            $customerRole = Role::where('slug', 'customer')->first();
+
+            //attach alla tabella pivot
+            if ($customerRole) {
+                $user->roles()->syncWithoutDetaching([ //syncWithOutDetaching serve in caso di richiesta simultanea, psql non restuiterà l'errore costraign
+                    $customerRole->id => [
+                        'id' => Str::uuid(),
+                        'assigned_by' => null,
+                        'assigned_at' => now()
+                    ]
+                ]);
+            }
+
 
             //marchiamo token 
             EmailVerificationToken::where('id', $storedToken->id)
                 ->update(['used_at' => now()]);
 
-                
+
             // Invalidiamo eventuali altri token ancora attivi per lo stesso utente,
             EmailVerificationToken::where('user_id', $user->id)
                 ->where('id', '!=', $storedToken->id)

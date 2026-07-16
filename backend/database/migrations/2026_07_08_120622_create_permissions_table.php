@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->string('name', 100)->unique();
             $table->string('slug',50)->unique();
             $table->string('permission_group', 50)->default('general');
-            $table->longText('description')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
 
             $table->index('permission_group');

@@ -84,17 +84,50 @@ class PermissionFactory extends Factory
     }
 
     /**
+     * Espone il catalogo in sola lettura ad altri consumer
+     * (es. PermissionSeeder), senza duplicarlo.
+     */
+    public static function catalog(): array
+    {
+        return static::$catalog;
+    }
+
+    /**
      * Restituisce uno slug casuale appartenente a un dato gruppo.
      */
-    protected function randomSlugForGroup(string $group): string
+    protected static function randomSlugForGroup(string $group): string
     {
         $slugs = array_filter(
             array_keys(static::$catalog),
             fn(string $slug) => str_starts_with($slug, "{$group}.")
         );
 
+        if (empty($slugs)) {
+            throw new \InvalidArgumentException("Nessun permesso trovato per il gruppo [{$group}].");
+        }
+
         return fake()->randomElement($slugs);
     }
+
+    /**
+     * Costruisce l'array di attributi coerenti a partire da uno slug.
+     * Statico e pubblico: riutilizzabile da qualunque punto del progetto.
+     */
+    public static function attributesFor(string $slug): array
+    {
+        if (!array_key_exists($slug, static::$catalog)) {
+            throw new \InvalidArgumentException("Slug di permesso sconosciuto: [{$slug}].");
+        }
+
+        return [
+            'name' => Str::headline(str_replace('.', ' ', $slug)),
+            'slug' => $slug,
+            'permission_group' => explode('.', $slug)[0],
+            'description' => static::$catalog[$slug],
+        ];
+    }
+
+
 
     /**
      * Permesso specifico, per riferirsi in modo esplicito a uno slug del catalogo
@@ -102,7 +135,7 @@ class PermissionFactory extends Factory
      */
     public function specific(string $slug): static
     {
-        return $this->state(fn() => $this->fromSlug($slug));
+        return $this->state(fn() => $this->attributesFor($slug));
     }
 
     /**
@@ -110,7 +143,7 @@ class PermissionFactory extends Factory
      */
     public function users(): static
     {
-        return $this->state(fn() => $this->fromSlug($this->randomSlugForGroup('users')));
+        return $this->state(fn() => $this->attributesFor($this->randomSlugForGroup('users')));
     }
 
     /**
