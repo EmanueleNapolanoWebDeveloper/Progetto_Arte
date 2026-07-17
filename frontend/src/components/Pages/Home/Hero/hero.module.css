@@ -1,7 +1,7 @@
 @reference "../../../../../app/globals.css";
 
 .section {
-  @apply relative h-[85vh] min-h-[560px] w-full overflow-hidden;
+  @apply relative h-[100vh] min-h-[560px] w-full overflow-hidden;
 }
 
 .heroImage {
