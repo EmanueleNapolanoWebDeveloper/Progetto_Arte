@@ -1,0 +1,38 @@
+@reference "../globals.css";
+
+.wrapper {
+  @apply relative min-h-screen flex flex-col;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+  @apply relative z-10 flex items-center justify-center py-8 px-6;
+}
+
+.logo {
+  @apply text-xl font-serif tracking-tight text-primary no-underline transition-colors hover:text-accent;
+  text-shadow: 0 1px 12px rgba(250, 249, 246, 0.8);
+}
+
+/* ==================== MAIN / PANEL ==================== */
+.main {
+  @apply relative z-10 flex-1 flex items-center justify-center px-4 py-4 min-h-[80vh];
+}
+
+.panel {
+  @apply w-full max-w-xl rounded-3xl px-8 py-10 sm:px-12 sm:py-12;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 40px rgba(28, 28, 30, 0.12);
+}
+
+/* ==================== FOOTER ==================== */
+.footer {
+  @apply relative z-10 py-6 text-center;
+}
+
+.footerText {
+  @apply text-xs text-text-secondary;
+  text-shadow: 0 1px 8px rgba(250, 249, 246, 0.8);
+}

@@ -1,0 +1,77 @@
+@reference "../../../../../app/globals.css";
+
+.section {
+  @apply max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8;
+}
+
+.header {
+  @apply text-center mb-10;
+}
+
+.eyebrow {
+  @apply text-sm font-medium uppercase tracking-wide text-text-secondary;
+}
+
+.title {
+  @apply mt-1 text-3xl font-serif tracking-tight text-text-primary;
+}
+
+/* ==================== TAB SWITCHER ==================== */
+.tabList {
+  @apply flex justify-center gap-2 mb-12;
+}
+
+.tabButton {
+  @apply px-6 py-2.5 text-[0.9375rem] font-medium text-text-secondary bg-transparent border border-border rounded-full cursor-pointer transition-colors hover:text-text-primary hover:border-accent;
+}
+
+.tabButtonActive,
+.tabButtonActive:hover {
+  @apply text-background bg-primary border-primary;
+}
+
+/* ==================== PANEL & STEPS ==================== */
+/* Nessuna utility Tailwind nativa per un fade-in custom: manteniamo keyframe dedicato */
+.panel {
+  animation: fadeIn 300ms ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stepsList {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-8 list-none m-0 p-0;
+}
+
+@media (min-width: 1024px) {
+  .stepsList[data-count="3"] {
+    @apply grid-cols-3;
+  }
+  .stepsList[data-count="4"] {
+    @apply grid-cols-4;
+  }
+}
+
+.stepItem {
+  @apply flex flex-col gap-2 p-6 rounded-2xl bg-secondary;
+}
+
+.stepNumber {
+  @apply text-sm font-semibold text-accent tabular-nums;
+}
+
+.stepTitle {
+  @apply text-[1.0625rem] font-semibold text-text-primary;
+}
+
+.stepDescription {
+  @apply text-sm leading-relaxed text-text-secondary;
+}

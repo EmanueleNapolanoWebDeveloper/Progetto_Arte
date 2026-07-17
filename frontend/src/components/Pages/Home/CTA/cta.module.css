@@ -1,0 +1,78 @@
+@reference "../../../../../app/globals.css";
+
+/* Sfondo sempre scuro: valore fisso, non bg-primary (che si inverte in dark mode) */
+.section {
+  @apply py-20;
+  background-color: #1c1c1e;
+}
+
+.container {
+  @apply max-w-2xl mx-auto px-6 text-center;
+}
+
+.eyebrow {
+  @apply text-sm font-medium uppercase tracking-wide text-background/60;
+}
+
+.title {
+  @apply mt-2 text-4xl font-serif tracking-tight text-background;
+}
+
+.subtitle {
+  @apply mt-4 text-base leading-relaxed text-background/80;
+}
+
+/* ==================== CTA BUTTONS ==================== */
+.actions {
+  @apply flex flex-col gap-3 justify-center mt-8 min-[480px]:flex-row;
+}
+
+.primaryButton {
+  @apply px-7 py-3 text-[0.9375rem] font-semibold text-primary bg-background rounded-full no-underline transition-all hover:bg-background/90 hover:-translate-y-px;
+}
+
+.secondaryButton {
+  @apply px-7 py-3 text-[0.9375rem] font-semibold text-background bg-transparent border border-background/30 rounded-full no-underline transition-all hover:border-background/60 hover:-translate-y-px;
+}
+
+/* ==================== NEWSLETTER FORM ==================== */
+.newsletterForm {
+  @apply mt-12 pt-10 border-t border-background/10;
+}
+
+.srOnly {
+  @apply sr-only;
+}
+
+.fieldGroup {
+  @apply flex flex-col gap-3 max-w-md mx-auto min-[480px]:flex-row;
+}
+
+.emailInput {
+  @apply flex-1 px-4 py-3 text-[0.9375rem] text-primary bg-background rounded-full border border-transparent outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#1c1c1e];
+}
+
+.emailInputError {
+  @apply border-error;
+}
+
+.submitButton {
+  @apply px-6 py-3 text-[0.9375rem] font-semibold text-primary bg-background rounded-full border-none cursor-pointer whitespace-nowrap transition-colors enabled:hover:bg-background/90 disabled:opacity-60 disabled:cursor-not-allowed;
+}
+
+/* ==================== FEEDBACK MESSAGES ==================== */
+.errorText {
+  @apply mt-3 text-[0.8125rem] text-error text-left max-w-md mx-auto;
+}
+
+.successText {
+  @apply mt-3 text-[0.8125rem] text-success;
+}
+
+.disclaimer {
+  @apply mt-5 text-xs text-background/50;
+}
+
+.disclaimerLink {
+  @apply text-background/70 underline underline-offset-2 hover:text-background transition-colors;
+}

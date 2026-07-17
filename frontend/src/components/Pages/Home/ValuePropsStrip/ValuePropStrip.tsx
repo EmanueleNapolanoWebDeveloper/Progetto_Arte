@@ -1,3 +1,4 @@
+// components/home/ValuePropStrip/ValuePropStrip.tsx
 import { ShieldCheck, Truck, Palette, Lock } from "lucide-react";
 import styles from "./valuePropStrip.module.css";
 
@@ -36,9 +37,11 @@ export default function ValuePropStrip() {
     <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.grid}>
-          {VALUE_PROPS.map(({ icon: Icon, title, description }) => (
-            <div key={title} className={styles.item}>
-              <Icon className={styles.icon} aria-hidden="true" />
+          {VALUE_PROPS.map(({ icon: Icon, title, description }, i) => (
+            <div key={title} className={styles.item} data-index={i}>
+              <div className={styles.iconBadge}>
+                <Icon className={styles.icon} aria-hidden="true" />
+              </div>
               <h3 className={styles.title}>{title}</h3>
               <p className={styles.description}>{description}</p>
             </div>

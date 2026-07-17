@@ -1,9 +1,11 @@
+// components/auth/VerifyEmail/VerifyEmailClient.tsx
 "use client";
 
 import { useState } from "react";
 import { ApiError } from "@/src/lib/API/client";
-import { verifyEmailUser } from "@/src/features/Auth/API/verifyEmailUser"; // <--- Importa la tua nuova funzione
+import { verifyEmailUser } from "@/src/features/Auth/API/verifyEmailUser";
 import Link from "next/link";
+import styles from "./verifyEmail.module.css";
 
 type Status = "idle" | "loading" | "success" | "expired" | "error";
 
@@ -21,7 +23,6 @@ export default function VerifyEmailClient({ token }: { token: string | null }) {
     setMessage("Stiamo verificando le tue credenziali d'accesso...");
 
     try {
-      // Chiamata pulita e tipizzata tramite il tuo nuovo handler
       await verifyEmailUser(token);
 
       setStatus("success");
@@ -40,20 +41,20 @@ export default function VerifyEmailClient({ token }: { token: string | null }) {
       setMessage(
         err instanceof ApiError
           ? err.message
-          : "Si è verificato un errored di connessione. Riprova tra qualche minuto.",
+          : "Si è verificato un errore di connessione. Riprova tra qualche minuto.",
       );
     }
   }
 
   return (
-    <div className="flex min-h-[50vh] flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-6 rounded-2xl border border-zinc-100 bg-white p-8 text-center shadow-xl shadow-zinc-100/50 dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-none">
+    <div className={styles.wrapper}>
+      <div className={styles.card}>
         {/* Icone di Stato dinamiche */}
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full">
+        <div className={styles.iconWrapper}>
           {status === "idle" && (
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
+            <div className={`${styles.iconCircle} ${styles.iconCircleIdle}`}>
               <svg
-                className="h-6 w-6"
+                className={styles.icon}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -67,13 +68,11 @@ export default function VerifyEmailClient({ token }: { token: string | null }) {
               </svg>
             </div>
           )}
-          {status === "loading" && (
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-zinc-200 border-t-indigo-600 dark:border-zinc-700 dark:border-t-indigo-400" />
-          )}
+          {status === "loading" && <div className={styles.spinner} />}
           {status === "success" && (
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
+            <div className={`${styles.iconCircle} ${styles.iconCircleSuccess}`}>
               <svg
-                className="h-6 w-6"
+                className={styles.icon}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -88,9 +87,9 @@ export default function VerifyEmailClient({ token }: { token: string | null }) {
             </div>
           )}
           {(status === "error" || status === "expired" || !token) && (
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400">
+            <div className={`${styles.iconCircle} ${styles.iconCircleWarning}`}>
               <svg
-                className="h-6 w-6"
+                className={styles.icon}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -107,29 +106,27 @@ export default function VerifyEmailClient({ token }: { token: string | null }) {
         </div>
 
         {/* Testi */}
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <div className={styles.textGroup}>
+          <h1 className={styles.title}>
             {status === "success"
               ? "Email Verificata!"
               : "Verifica del Profilo"}
           </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 balance-text px-2">
-            {message}
-          </p>
+          <p className={styles.message}>{message}</p>
         </div>
 
         {/* Azioni Condizionali */}
-        <div className="pt-2">
+        <div className={styles.actions}>
           {token && status !== "success" && status !== "expired" && (
             <button
               onClick={handleVerify}
               disabled={status === "loading"}
-              className="w-full inline-flex justify-center items-center rounded-xl bg-zinc-900 px-4 py-3 text-sm font-semibold text-white shadow transition-all duration-200 hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              className={styles.primaryButton}
             >
               {status === "loading" ? (
                 <>
                   <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white dark:text-zinc-900"
+                    className={styles.buttonSpinner}
                     fill="none"
                     viewBox="0 0 24 24"
                   >
@@ -156,10 +153,7 @@ export default function VerifyEmailClient({ token }: { token: string | null }) {
           )}
 
           {status === "success" && (
-            <Link
-              href="/login"
-              className="w-full inline-flex justify-center items-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow transition-all duration-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400"
-            >
+            <Link href="/login" className={styles.primaryButton}>
               Accedi al tuo Profilo
             </Link>
           )}
@@ -167,7 +161,7 @@ export default function VerifyEmailClient({ token }: { token: string | null }) {
           {status === "expired" && (
             <button
               onClick={() => window.location.reload()}
-              className="w-full inline-flex justify-center items-center rounded-xl bg-zinc-100 px-4 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+              className={styles.secondaryButton}
             >
               Richiedi nuovo link
             </button>

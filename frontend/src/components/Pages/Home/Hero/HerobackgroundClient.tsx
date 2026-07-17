@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import styles from "./hero.module.css";
 
 type Work = { imageUrl: string; title: string; blurDataUrl: string };
 
@@ -27,9 +28,7 @@ export default function HeroBackgroundClient({
       {all.map((work, i) => (
         <div
           key={work.imageUrl}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            i === activeIndex ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
+          className={`${styles.slide} ${i === activeIndex ? styles.slideActive : ""}`}
           aria-hidden={i !== activeIndex}
         >
           {/* i === 0 già renderizzata dal server come priority, qui la
@@ -41,7 +40,7 @@ export default function HeroBackgroundClient({
               alt={work.title}
               fill
               sizes="100vw"
-              className="object-cover"
+              className={styles.slideImage}
               placeholder="blur"
               blurDataURL={work.blurDataUrl}
             />

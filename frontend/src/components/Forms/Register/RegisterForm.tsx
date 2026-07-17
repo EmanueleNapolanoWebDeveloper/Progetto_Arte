@@ -1,22 +1,17 @@
+// components/auth/RegisterForm/RegisterForm.tsx
 "use client";
 
-// CSS
 import styles from "./registerForm.module.css";
-
-// HOOKS
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-// ZOD & SCHEMAS
 import {
   registerSchema,
   RegisterFormData,
 } from "@/src/schemas/Auth/RegisterSchema";
 
-// FEATURES
 import { registerUser } from "@/src/features/Auth/API/register_user";
 
-// COMPONENTI RIUTILIZZABILI
 import Form from "../../UI/Form/Form";
 import Input from "../../UI/Inputs/Input";
 
@@ -35,88 +30,120 @@ export default function RegisterForm() {
   }
 
   return (
-    <Form
-      schema={registerSchema}
-      defaultValues={{
-        name: "",
-        username: "",
-        email: "",
-        password: "",
-        password_confirmation: "",
-        acceptPrivacy: false,
-      }}
-      onSubmit={handleRegister}
-      submitLabel="Registrati"
-      className={styles.form}
-    >
-      {/* Estraiamo le props necessarie usando le Render Props */}
-      {({ register, formState: { errors } }) => (
-        <>
-          <h3 className={styles.title}>Registrazione</h3>
+    <div>
+      {/* Header del form: eyebrow + titolo + sottotitolo */}
+      <div className={styles.header}>
+        <p className={styles.eyebrow}>Unisciti a noi</p>
+        <h1 className={styles.title}>Crea il tuo account</h1>
+        <p className={styles.subtitle}>
+          Accedi a migliaia di opere originali, o inizia a vendere i tuoi lavori
+          a una community di collezionisti.
+        </p>
+      </div>
 
-          {/* Campo Nome */}
-          <Input
-            label="Nome"
-            placeholder="Inserisci il tuo nome"
-            error={errors.name?.message}
-            {...register("name")}
-          />
+      <Form
+        schema={registerSchema}
+        defaultValues={{
+          name: "",
+          username: "",
+          email: "",
+          password: "",
+          password_confirmation: "",
+          acceptPrivacy: false,
+        }}
+        onSubmit={handleRegister}
+        submitLabel="Crea account"
+        className={styles.form}
+      >
+        {({ register, formState: { errors } }) => (
+          <>
+            {/* Sezione: dati personali */}
+            <div className={styles.fieldGroup}>
+              <p className={styles.groupLabel}>I tuoi dati</p>
 
-          {/* Campo Username */}
-          <Input
-            label="Username"
-            placeholder="Scegli Username"
-            error={errors.username?.message}
-            {...register("username")}
-          />
+              <div className={styles.row}>
+                <Input
+                  label="Nome"
+                  placeholder="Inserisci il tuo nome"
+                  autoComplete="name"
+                  error={errors.name?.message}
+                  {...register("name")}
+                />
 
-          {/* Campo Email */}
-          <Input
-            label="Email"
-            type="email"
-            placeholder="nome@esempio.com"
-            error={errors.email?.message}
-            {...register("email")}
-          />
+                <Input
+                  label="Username"
+                  placeholder="Scegli username"
+                  autoComplete="username"
+                  error={errors.username?.message}
+                  {...register("username")}
+                />
+              </div>
 
-          {/* Campo Password */}
-          <Input
-            label="Password"
-            type="password"
-            placeholder="Minimo 8 Caratteri"
-            error={errors.password?.message}
-            {...register("password")}
-          />
+              <Input
+                label="Email"
+                type="email"
+                placeholder="nome@esempio.com"
+                autoComplete="email"
+                error={errors.email?.message}
+                {...register("email")}
+              />
+            </div>
 
-          {/* Campo Conferma Password */}
-          <Input
-            label="Conferma Password"
-            type="password"
-            placeholder="Ripeti la Password"
-            error={errors.password_confirmation?.message}
-            {...register("password_confirmation")}
-          />
+            {/* Sezione: sicurezza account */}
+            <div className={styles.fieldGroup}>
+              <p className={styles.groupLabel}>Sicurezza</p>
 
-          {/* Campo Accettazione Privacy */}
-          <Input
-            type="checkbox"
-            error={errors.acceptPrivacy?.message}
-            {...register("acceptPrivacy")}
-            label={
-              <>
-                Accetto la{" "}
-                <Link
-                  href="/privacy-policy"
-                  target="_blank"
-                  className="underline hover:text-[var(--color-accent)]"
-                >
-                  Privacy Policy
-                </Link>
-              </>
-            }
-          />
-        </>
-      )}
-    </Form>
+              <Input
+                label="Password"
+                type="password"
+                placeholder="Minimo 8 caratteri"
+                autoComplete="new-password"
+                error={errors.password?.message}
+                {...register("password")}
+              />
+
+              <Input
+                label="Conferma password"
+                type="password"
+                placeholder="Ripeti la password"
+                autoComplete="new-password"
+                error={errors.password_confirmation?.message}
+                {...register("password_confirmation")}
+              />
+
+              <p className={styles.passwordHint}>
+                Usa almeno 8 caratteri, con una combinazione di lettere, numeri
+                e simboli per maggiore sicurezza.
+              </p>
+            </div>
+
+            <Input
+              type="checkbox"
+              error={errors.acceptPrivacy?.message}
+              {...register("acceptPrivacy")}
+              label={
+                <>
+                  Accetto la{" "}
+                  <Link
+                    href="/privacy-policy"
+                    target="_blank"
+                    className={styles.inlineLink}
+                  >
+                    Privacy Policy
+                  </Link>
+                </>
+              }
+            />
+          </>
+        )}
+      </Form>
+
+      <div className={styles.loginContainer}>
+        <span className={styles.loginText}>Hai già un account?</span>
+        <Link href="/login" className={styles.loginButton}>
+          Accedi
+        </Link>
+      </div>
+    </div>
   );
 }

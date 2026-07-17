@@ -1,0 +1,85 @@
+@reference "../../../../../app/globals.css";
+
+.section {
+  @apply py-20;
+}
+
+.header {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-10;
+}
+
+.eyebrow {
+  @apply text-sm font-medium uppercase tracking-wide text-text-secondary;
+}
+
+.title {
+  @apply mt-1 text-3xl font-serif tracking-tight text-text-primary;
+}
+
+/* ==================== MARQUEE ==================== */
+/* mask-image e keyframes non hanno equivalente @apply: restano CSS puro */
+.marqueeWrapper {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+}
+
+.marqueeTrack {
+  @apply flex gap-6 w-max;
+  animation: scroll 40s linear infinite;
+}
+
+.marqueeWrapper:hover .marqueeTrack {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marqueeTrack {
+    animation: none;
+  }
+  .marqueeWrapper {
+    @apply overflow-x-auto;
+  }
+}
+
+/* ==================== CARD ==================== */
+.card {
+  @apply shrink-0 w-80 p-7 m-0 rounded-2xl bg-card border border-border;
+}
+
+.quote {
+  @apply m-0 text-[0.9375rem] leading-relaxed text-text-primary;
+}
+
+.footer {
+  @apply flex flex-col mt-5;
+}
+
+.authorName {
+  @apply text-sm font-semibold text-text-primary;
+}
+
+.authorRole {
+  @apply text-[0.8125rem] text-text-secondary;
+}

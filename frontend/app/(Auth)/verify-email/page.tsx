@@ -8,10 +8,5 @@ export default async function VerifyEmailPage({
   const params = await searchParams;
   const token = params.token ?? null;
 
-  return (
-    <div style={{ padding: "40px", textAlign: "center" }}>
-      <h1>Verifica Email</h1>
-      <VerifyEmailClient token={token} />
-    </div>
-  );
+  return <VerifyEmailClient token={token} />;
 }

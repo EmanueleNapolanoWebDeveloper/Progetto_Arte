@@ -1,0 +1,188 @@
+@reference "../../../../../app/globals.css";
+
+.section {
+  @apply max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+  @apply flex items-end justify-between mb-10;
+}
+
+.eyebrow {
+  @apply text-sm font-medium uppercase tracking-wide text-text-secondary;
+}
+
+.title {
+  @apply mt-1 text-3xl font-serif tracking-tight text-text-primary;
+}
+
+.viewAllLink {
+  @apply hidden sm:block text-sm font-medium text-primary underline-offset-4 hover:text-accent hover:underline transition-colors;
+}
+
+.viewAllLinkMobile {
+  @apply block sm:hidden mt-8 text-center text-sm font-medium text-primary underline-offset-4 hover:text-accent hover:underline transition-colors;
+}
+
+/* ==================== GRID PRINCIPALE ==================== */
+.grid {
+  @apply grid grid-cols-1 gap-8 lg:grid-cols-12;
+}
+
+/* ==================== FEATURED (grande) ==================== */
+.featuredLink {
+  @apply relative block col-span-1 overflow-hidden rounded-2xl no-underline lg:col-span-7;
+}
+
+.featuredImageWrapper {
+  @apply relative w-full aspect-[4/3] overflow-hidden bg-secondary;
+}
+
+.featuredImage {
+  @apply object-cover transition-transform duration-500 ease-out;
+}
+
+/* Sostituisce group-hover: incompatibile con CSS Modules (le classi vengono rinominate) */
+.featuredLink:hover .featuredImage {
+  @apply scale-[1.03];
+}
+
+.featuredOverlay {
+  @apply absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/70 via-black/20 to-transparent;
+}
+
+.featuredMeta {
+  @apply text-xs font-medium uppercase tracking-wide text-white/80;
+}
+
+.featuredTitle {
+  @apply mt-2 text-2xl font-serif text-white;
+}
+
+.featuredExcerpt {
+  @apply mt-2 max-w-md text-sm text-white/85 line-clamp-2;
+}
+
+/* ==================== SECONDARIE (lista) ==================== */
+.secondaryList {
+  @apply col-span-1 flex flex-col gap-6 lg:col-span-5;
+}
+
+.secondaryLink {
+  @apply flex gap-4 p-1 rounded-xl no-underline transition-colors hover:bg-secondary;
+}
+
+.secondaryImageWrapper {
+  @apply relative h-24 w-28 sm:h-28 sm:w-32 shrink-0 overflow-hidden rounded-lg bg-secondary;
+}
+
+.secondaryImage {
+  @apply object-cover transition-transform duration-500 ease-out;
+}
+
+.secondaryLink:hover .secondaryImage {
+  @apply scale-105;
+}
+
+.secondaryContent {
+  @apply flex flex-col justify-center py-1;
+}
+
+.secondaryMeta {
+  @apply text-xs font-medium uppercase tracking-wide text-text-secondary;
+}
+
+.secondaryTitle {
+  @apply mt-1 text-base font-medium leading-snug text-text-primary;
+}
+
+.secondaryLink:hover .secondaryTitle {
+  @apply underline;
+}
+
+.secondaryExcerpt {
+  @apply mt-1 text-sm text-text-secondary line-clamp-2;
+}
+
+/* ==================== SKELETON ==================== */
+.skeletonPulse {
+  @apply animate-pulse bg-border rounded;
+}
+
+.skeletonEyebrow {
+  composes: skeletonPulse;
+  @apply h-3 w-16;
+}
+
+.skeletonTitle {
+  composes: skeletonPulse;
+  @apply mt-2 h-8 w-72 sm:w-96;
+}
+
+.skeletonViewAll {
+  composes: skeletonPulse;
+  @apply hidden h-4 w-32 sm:block;
+}
+
+.skeletonFeatured {
+  @apply col-span-1 overflow-hidden rounded-2xl lg:col-span-7;
+}
+
+.skeletonFeaturedImage {
+  composes: skeletonPulse;
+  @apply relative w-full aspect-[4/3] rounded-none;
+}
+
+.skeletonFeaturedOverlay {
+  @apply absolute inset-x-0 bottom-0 p-6 flex flex-col gap-3;
+}
+
+.skeletonFeaturedMeta {
+  @apply h-3 w-24 bg-white/40 rounded;
+}
+
+.skeletonFeaturedTitle {
+  @apply h-6 w-3/4 bg-white/40 rounded;
+}
+
+.skeletonFeaturedExcerpt {
+  @apply h-4 w-1/2 bg-white/30 rounded;
+}
+
+.skeletonSecondaryList {
+  @apply col-span-1 flex flex-col gap-6 lg:col-span-5;
+}
+
+.skeletonSecondaryItem {
+  @apply flex gap-4;
+}
+
+.skeletonSecondaryImage {
+  composes: skeletonPulse;
+  @apply h-24 w-28 sm:h-28 sm:w-32 shrink-0 rounded-lg;
+}
+
+.skeletonSecondaryContent {
+  @apply flex-1 flex flex-col justify-center gap-2 py-1;
+}
+
+.skeletonSecondaryMeta {
+  composes: skeletonPulse;
+  @apply h-3 w-20;
+}
+
+.skeletonSecondaryTitle {
+  composes: skeletonPulse;
+  @apply h-4 w-full;
+}
+
+.skeletonSecondaryTitleShort {
+  composes: skeletonPulse;
+  @apply h-4 w-2/3;
+}
+
+.skeletonSecondaryExcerpt {
+  composes: skeletonPulse;
+  @apply h-3 w-full;
+}

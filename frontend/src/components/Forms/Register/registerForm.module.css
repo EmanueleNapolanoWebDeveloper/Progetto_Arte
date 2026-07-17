@@ -1,25 +1,80 @@
+/* components/auth/RegisterForm/registerForm.module.css */
 @reference "../../../../app/globals.css";
 
-.form {
-  @apply mx-auto flex w-full max-w-md flex-col gap-4 rounded-xl bg-white p-8 shadow-lg;
+/* ==================== HEADER ==================== */
+.header {
+  @apply mb-8 text-center;
+}
+
+.eyebrow {
+  @apply text-xs font-medium uppercase tracking-wide text-accent;
 }
 
 .title {
-  @apply mb-4 text-center text-2xl font-bold text-gray-800;
+  @apply mt-2 text-2xl font-serif tracking-tight text-text-primary sm:text-3xl;
 }
 
+.subtitle {
+  @apply mt-3 text-sm leading-relaxed text-text-secondary;
+}
+
+/* ==================== FORM ==================== */
+.form {
+  @apply mx-auto flex w-full flex-col gap-6;
+}
+
+/* ==================== FIELD GROUPS ==================== */
+.fieldGroup {
+  @apply flex flex-col gap-4;
+}
+
+.groupLabel {
+  @apply text-xs font-medium uppercase tracking-wide text-text-secondary;
+}
+
+.row {
+  @apply grid grid-cols-1 gap-4 sm:grid-cols-2;
+}
+
+/* ==================== INPUT (fallback se non gestito dal componente Input) ==================== */
 .input {
-  @apply w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 outline-none transition;
+  @apply w-full rounded-lg border border-border px-4 py-2.5 text-text-primary outline-none transition;
 }
 
 .input:focus {
-  @apply border-indigo-500 ring-2 ring-indigo-200;
+  @apply border-accent ring-2 ring-accent/20;
+}
+
+.input[aria-invalid="true"] {
+  @apply border-error ring-2 ring-error/10;
 }
 
 .error {
-  @apply mt-1 text-sm text-red-500;
+  @apply mt-1 text-sm text-error;
 }
 
-.button {
-  @apply mt-4 rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white transition hover:bg-indigo-700 disabled:opacity-50;
+.passwordHint {
+  @apply -mt-1 text-xs leading-relaxed text-text-secondary;
+}
+
+.inlineLink {
+  @apply underline underline-offset-2 transition-colors hover:text-accent;
+}
+
+/* ==================== SUBMIT BUTTON ==================== */
+.submitButton {
+  @apply mt-2 rounded-full bg-primary px-4 py-3 font-semibold text-background transition hover:bg-primary/90 disabled:opacity-50;
+}
+
+/* ==================== LOGIN CTA (rimando per chi ha già un account) ==================== */
+.loginContainer {
+  @apply mt-8 flex flex-col items-center gap-3 border-t border-border pt-6;
+}
+
+.loginText {
+  @apply text-sm text-text-secondary;
+}
+
+.loginButton {
+  @apply inline-block w-full rounded-full border border-primary px-6 py-2.5 text-center text-sm font-medium text-primary no-underline transition-all duration-200 ease-in-out hover:bg-primary hover:text-background;
 }
