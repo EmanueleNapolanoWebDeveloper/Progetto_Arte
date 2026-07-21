@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
@@ -16,10 +17,12 @@ Route::prefix('auth')->group(function () {
     Route::post('/reset-password', ResetPasswordController::class);
 });
 
+Route::get('categories/specialties', [CategoryController::class, 'specialties']);
+
 //Rotte di autenticazione protette
 Route::middleware('auth:sanctum')->group(function () {
-    Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'user']);
-    Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'logout']);
+    Route::get('/user', [UserController::class, 'user']);
+    Route::post('/logout', [UserController::class, 'logout']);
 });
 
 

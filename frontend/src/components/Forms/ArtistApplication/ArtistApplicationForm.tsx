@@ -9,6 +9,7 @@ import {
   artistApplicationSchema,
 } from "@/src/schemas/User/Artist/artistApplication";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 
 type CategoryOptions = {
   id: string;
@@ -145,7 +146,7 @@ export function ArtistApplicationForm({
           <ul className={styles.previewGrid}>
             {previews.map((src, index) => (
               <li key={src} className={styles.previewItem}>
-                <img src={src} alt={`Anteprima opera ${index + 1}`} />
+                <Image src={src} alt={`Anteprima opera ${index + 1}`} />
                 <button
                   type="button"
                   onClick={() => removeFile(index)}

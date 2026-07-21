@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+export type CategoryOption = {
+  id: string;
+  name: string;
+  parentName: string;
+};
+
 const MAX_FILE_SIZE = 5 + 1024 * 1024; //5 mb
 const ACCEPTED_IMAGES_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
