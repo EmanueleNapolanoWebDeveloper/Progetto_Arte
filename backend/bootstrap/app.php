@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'ability' => CheckForAnyAbility::class,
         ]);
         $middleware->statefulApi();
+        $middleware->validateCsrfTokens();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

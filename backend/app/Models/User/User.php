@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\User;
 
+use App\Models\Admin\ArtistApplication;
 use App\Models\Auth\LoginHistory;
-use App\Models\Role;
+use App\Models\Admin\Role;
 use App\Models\Auth\UserBan;
 use App\Models\Auth\UserSuspension;
+use App\Models\User\ArtistProfile;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -112,6 +116,29 @@ class User extends Authenticatable
         return $this->hasMany(
             UserSuspension::class
         );
+    }
+
+
+    //------------------->
+    // ARTIST
+    //------------------->
+
+    //profilo artista
+    public function artistProfile(): HasOne
+    {
+        return $this->hasOne(ArtistProfile::class);
+    }
+
+    //richiesta di candidatura a artist
+    public function artistApplication(): HasMany
+    {
+        return $this->hasMany(ArtistApplication::class);
+    }
+
+    //utente che revisiona candidatura 
+    public function reviewer(): HasMany
+    {
+        return $this->hasMany(ArtistApplication::class, 'reviewed_by');
     }
 
 

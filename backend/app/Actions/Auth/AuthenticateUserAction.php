@@ -4,7 +4,7 @@ namespace App\Actions\Auth;
 
 use App\Exceptions\AuthenticationException;
 use App\Models\Auth\LoginHistory;
-use App\Models\User;
+use App\Models\User\User;
 use App\Services\Auth\AccountStatusChecker;
 use App\Services\Auth\LoginRateLimiter;
 use Illuminate\Http\Request;

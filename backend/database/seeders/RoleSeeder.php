@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
+use App\Models\Admin\Role;
 use Database\Factories\RoleFactory;
 use Illuminate\Database\Seeder;
 

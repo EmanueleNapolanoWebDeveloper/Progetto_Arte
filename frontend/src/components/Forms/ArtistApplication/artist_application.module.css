@@ -1,0 +1,68 @@
+/* ArtistApplicationForm.module.css */
+@reference "../../../../app/globals.css";
+
+.form {
+  @apply flex flex-col gap-6 max-w-xl;
+}
+
+.field {
+  @apply flex flex-col gap-2;
+}
+
+.field label {
+  @apply text-sm font-medium;
+  color: var(--color-primary);
+}
+
+.field textarea,
+.field select,
+.field input[type="file"] {
+  @apply border rounded-md p-3;
+  border-color: var(--color-secondary);
+}
+
+.field textarea[aria-invalid="true"],
+.field select[aria-invalid="true"] {
+  border-color: var(--color-accent);
+  background-color: color-mix(in srgb, var(--color-accent) 8%, transparent);
+}
+
+.error {
+  @apply text-sm;
+  color: var(--color-accent);
+}
+
+.formError {
+  @apply text-sm p-3 rounded-md;
+  color: var(--color-accent);
+  background-color: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  animation: fadeInDown 0.2s ease-out;
+}
+
+.previewGrid {
+  @apply grid grid-cols-3 gap-3 mt-2;
+}
+
+.previewItem {
+  @apply relative rounded-md overflow-hidden;
+}
+
+.previewItem img {
+  @apply w-full h-24 object-cover;
+}
+
+.previewItem button {
+  @apply absolute top-1 right-1 rounded-full w-6 h-6 flex items-center justify-center;
+  background-color: color-mix(in srgb, black 60%, transparent);
+  color: white;
+}
+
+.submitButton {
+  @apply rounded-md py-3 font-medium;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+}
+
+.submitButton:disabled {
+  @apply opacity-60;
+}

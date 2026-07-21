@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import styles from "./cta.module.css";
+import Link from "next/link";
 
 const newsletterSchema = z.object({
   email: z
@@ -56,12 +57,12 @@ export function CTA() {
         </p>
 
         <div className={styles.actions}>
-          <a href="/opere" className={styles.primaryButton}>
+          <Link href="/opere" className={styles.primaryButton}>
             Esplora le opere
-          </a>
-          <a href="/diventa-artista" className={styles.secondaryButton}>
+          </Link>
+          <Link href="/become-artist" className={styles.secondaryButton}>
             Diventa artista
-          </a>
+          </Link>
         </div>
 
         <form

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Admin;
 
-use App\Models\User;
-use App\Models\Permission;
+use App\Models\User\User;
+use App\Models\Admin\Permission;
 use Illuminate\Database\Eloquent\Concerns\HasUniqueIds;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

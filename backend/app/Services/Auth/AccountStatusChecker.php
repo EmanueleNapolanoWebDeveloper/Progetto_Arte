@@ -3,7 +3,7 @@ namespace App\Services\Auth;
 
 use App\Exceptions\AuthenticationException;
 use App\Models\Auth\LoginHistory;
-use App\Models\User;
+use App\Models\User\User;
 use App\Models\Auth\UserBan;
 use App\Models\Auth\UserSuspension;
 

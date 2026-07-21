@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Permission;
+use App\Models\Admin\Permission;
 use Database\Factories\PermissionFactory;
 use Illuminate\Database\Seeder;
 
