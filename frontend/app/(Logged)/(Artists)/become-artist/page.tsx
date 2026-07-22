@@ -16,12 +16,22 @@ export default async function Page() {
   };
 
   return (
-    <main style={{ maxWidth: "600px", margin: "0 auto", padding: "2rem" }}>
-      <h1>Candidatura Artista</h1>
-      <ArtistApplicationForm
-        categories={categories}
-        onSubmitApplication={handleTestSubmit}
-      />
+    <main style={{ width: "100%", padding: "2rem 1.5rem" }}>
+      <div style={{ width: "100%", maxWidth: "1200px", margin: "0 auto" }}>
+        <h1
+          style={{
+            marginBottom: "2rem",
+            fontSize: "1.75rem",
+            fontWeight: "700",
+          }}
+        >
+          Candidatura Artista
+        </h1>
+        <ArtistApplicationForm
+          categories={categories}
+          onSubmitApplication={handleTestSubmit}
+        />
+      </div>
     </main>
   );
 }

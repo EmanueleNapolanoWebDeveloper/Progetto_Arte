@@ -1,7 +1,7 @@
 // src/components/Pages/Home/ArtistSpotlight/ArtistCard.tsx
 import Image from "next/image";
 import Link from "next/link";
-import { Artist } from "@/src/types/artist";
+import { Artist } from "@/src/types/User/Artist/artist";
 import ArtistFollowButton from "./ArtistFollowButton";
 import styles from "./ArtistSpotlight.module.css";
 

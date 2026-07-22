@@ -15,14 +15,15 @@ class CategoryController extends Controller
         $categories = Category::query()
             ->whereNotNull('parent_id')
             ->where('is_active', true)
-            ->with('parent:id,name')
+            ->whereHas('parent', fn($query) => $query->where('is_active', true))
+            ->with(['parent' => fn($query) => $query->select('id', 'name')])
             ->orderBy('display_order')
             ->get(['id', 'name', 'parent_id']);
 
         $data = $categories->map(fn(Category $category) => [
             'id' => $category->id,
             'name' => $category->name,
-            'parentName' => $category->parent->name,
+            'parentName' => $category->parent->name ?? 'Senza Categoria',
         ]);
 
         return response()->json([

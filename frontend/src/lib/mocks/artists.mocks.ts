@@ -1,5 +1,5 @@
 // src/lib/mocks/artists.mocks.ts
-import { Artist } from "@/src/types/artist";
+import { Artist } from "@/src/types/User/Artist/artist";
 
 export const artistsFixtures: Artist[] = [
   {

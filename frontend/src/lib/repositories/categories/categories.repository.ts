@@ -1,8 +1,7 @@
-import type { CategoryOption } from "@/src/schemas/User/Artist/artistApplication";
-
-type CategorySpecialtiesReponse = {
-  data: CategoryOption[];
-};
+import type {
+  CategoryOption,
+  CategorySpecialtiesResponse,
+} from "@/src/types/Category/categoryTypes";
 
 const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL ||
@@ -13,24 +12,29 @@ const API_URL = `${APP_URL}/api`;
 export async function getArtistSpecialtyCategories(): Promise<
   CategoryOption[]
 > {
-  const res = await fetch(`${API_URL}/categories/specialties`, {
-    headers: {
-      Accept: "application/json",
-    },
-    next: {
-      revalidate: 3600,
-    },
-  });
+  try {
+    const res = await fetch(`${API_URL}/categories/specialties`, {
+      headers: {
+        Accept: "application/json",
+      },
+      next: {
+        revalidate: 3600,
+      },
+    });
 
-  if (!res.ok) {
-    // 🔍 Diagnostica: Stampa nel terminale di Next.js la risposta di Laravel
-    const errorBody = await res.text();
-    console.error(`❌ Errore API Laravel [HTTP ${res.status}]:`, errorBody);
+    if (!res.ok) {
+      const errorBody = await res.text().catch(() => "Nessun corpo risposta");
+      console.error(`❌ Errore API Laravel [HTTP ${res.status}]:`, errorBody);
+      throw new Error(
+        `Errore HTTP ${res.status} durante il recupero delle categorie`,
+      );
+    }
 
-    throw new Error(`Impossibile recuperare le categorie (HTTP ${res.status})`);
+    const payload: CategorySpecialtiesResponse = await res.json();
+    return payload.data;
+  } catch (error) {
+    console.error("❌ Errore durante il recupero delle categorie:", error);
+    // Rilanciamo l'errore o restituiamo un array vuoto come fallback
+    throw error;
   }
-
-  const { data }: CategorySpecialtiesReponse = await res.json();
-
-  return data;
 }

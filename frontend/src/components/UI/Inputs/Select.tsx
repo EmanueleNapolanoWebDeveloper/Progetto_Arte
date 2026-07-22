@@ -26,7 +26,9 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           className={`${styles.baseInput} ${styles.select} ${error ? styles.inputError : ""} ${className}`}
           aria-invalid={!!error}
           {...props}
-        />
+        >
+          {children}
+        </select>
         {error && <span className={styles.errorMessage}>{error}</span>}
       </div>
     );

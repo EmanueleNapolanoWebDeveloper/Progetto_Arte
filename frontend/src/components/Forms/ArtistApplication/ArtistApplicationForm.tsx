@@ -1,178 +1,144 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import React, { useState } from "react";
-
-import styles from "./artist_application.module.css";
+import Form from "@/src/components/UI/Form/Form";
+import Input from "@/src/components/UI/Inputs/Input";
+import Textarea from "@/src/components/UI/TextArea/TextArea";
 import {
   ArtistApplicationFormData,
-  artistApplicationSchema,
+  ArtistApplicationSchema,
 } from "@/src/schemas/User/Artist/artistApplication";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-
-type CategoryOptions = {
-  id: string;
-  name: string;
-  parentName: string;
-};
+import type { CategoryOption } from "@/src/types/Category/categoryTypes";
+import styles from "./artist_application.module.css";
+import { CategoryCheckboxSelect } from "./CategoryCheckboxSelect";
+import { ImageUploader } from "../../UI/ImageUploader/ImageUploader";
 
 type Props = {
-  categories: CategoryOptions[];
+  categories: CategoryOption[];
   onSubmitApplication: (data: ArtistApplicationFormData) => Promise<void>;
 };
 
+const defaultValues: ArtistApplicationFormData = {
+  display_name: "",
+  bio: "",
+  website_url: "",
+  studio_location: "",
+  social_links: {
+    instagram: "",
+    behance: "",
+    facebook: "",
+    other: "",
+  },
+  statement: "",
+  specialtyIds: [],
+  portfolioSamples: [],
+};
+
 export function ArtistApplicationForm({
-  categories,
+  categories = [],
   onSubmitApplication,
 }: Props) {
-  const [previews, setPreviews] = useState<string[]>([]);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-
-  //useFORM
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<ArtistApplicationFormData>({
-    resolver: zodResolver(artistApplicationSchema),
-    defaultValues: {
-      specialtyIds: [],
-      portfolioSamples: [],
-    },
-  });
-
-  const selectedFiles = watch("portfolioSamples");
-
-  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
-    setValue("portfolioSamples", files, { shouldValidate: true });
-    setPreviews(files.map((file) => URL.createObjectURL(file)));
-  };
-
-  const removeFile = (index: number) => {
-    const updated = selectedFiles.filter((_, i) => i !== index);
-    setValue("portfolioSamples", updated, { shouldValidate: true });
-    setPreviews((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const onSubmit = async (data: ArtistApplicationFormData) => {
-    setSubmitError(null);
-
-    try {
-      onSubmitApplication(data);
-    } catch {
-      setSubmitError("Invio non riuscito. Risèporva tra qualche istante");
-    }
-  };
-
-  //raggruppa macro/microcategorie
-  const groupedCategories = categories.reduce<
-    Record<string, CategoryOptions[]>
-  >((acc, cat) => {
-    (acc[cat.parentName] ??= []).push(cat);
-    return acc;
-  }, {});
-
   return (
-    <form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className={styles.field}>
-        <label htmlFor="statement">Statement artistico</label>
-        <textarea
-          id="statement"
-          rows={6}
-          aria-invalid={!!errors.statement}
-          aria-describedby={errors.statement ? "statement-error" : undefined}
-          {...register("statement")}
-        />
-        {errors.statement && (
-          <p id="statement-error" className={styles.error}>
-            {errors.statement.message}
-          </p>
-        )}
-      </div>
+    <Form<ArtistApplicationFormData>
+      schema={ArtistApplicationSchema}
+      defaultValues={defaultValues}
+      submitLabel="Invia candidatura"
+      className={styles.form}
+      onSubmit={async (data) => {
+        await onSubmitApplication(data);
+      }}
+    >
+      {(methods) => {
+        const {
+          register,
+          setValue,
+          watch,
+          formState: { errors },
+        } = methods;
 
-      <div className={styles.field}>
-        <label htmlFor="specialties">Specializzazioni</label>
-        <select
-          id="specialties"
-          multiple
-          size={6}
-          aria-invalid={!!errors.specialtyIds}
-          aria-describedby={
-            errors.specialtyIds ? "specialties-error" : undefined
-          }
-          {...register("specialtyIds")}
-        >
-          {Object.entries(groupedCategories).map(([parentName, options]) => (
-            <optgroup key={parentName} label={parentName}>
-              {options.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-        {errors.specialtyIds && (
-          <p id="specialties-error" className={styles.error}>
-            {errors.specialtyIds.message}
-          </p>
-        )}
-      </div>
+        const portfolioFiles = watch("portfolioSamples") ?? [];
 
-      <div className={styles.field}>
-        <label htmlFor="portfolio">Opere di portfolio (3–5 immagini)</label>
-        <input
-          id="portfolio"
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          multiple
-          aria-invalid={!!errors.portfolioSamples}
-          aria-describedby={
-            errors.portfolioSamples ? "portfolio-error" : undefined
-          }
-          onChange={handleFilesChange}
-        />
-        {errors.portfolioSamples && (
-          <p id="portfolio-error" className={styles.error}>
-            {errors.portfolioSamples.message as string}
-          </p>
-        )}
+        return (
+          <div className={styles.formContainer}>
+            {/* Informazioni Personali / Studio (Griglia 2 Colonne) */}
+            <div className={styles.gridTwoColumns}>
+              <Input
+                label="Nome d'arte"
+                error={errors.display_name?.message}
+                {...register("display_name")}
+              />
 
-        {previews.length > 0 && (
-          <ul className={styles.previewGrid}>
-            {previews.map((src, index) => (
-              <li key={src} className={styles.previewItem}>
-                <Image src={src} alt={`Anteprima opera ${index + 1}`} />
-                <button
-                  type="button"
-                  onClick={() => removeFile(index)}
-                  aria-label={`Rimuovi opera ${index + 1}`}
-                >
-                  ×
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+              <Input
+                label="Città / Paese dello studio"
+                error={errors.studio_location?.message}
+                {...register("studio_location")}
+              />
+            </div>
 
-      {submitError && (
-        <p role="alert" className={styles.formError}>
-          {submitError}
-        </p>
-      )}
+            <Textarea
+              label="Bio"
+              rows={3}
+              error={errors.bio?.message}
+              {...register("bio")}
+            />
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className={styles.submitButton}
-      >
-        {isSubmitting ? "Invio in corso…" : "Invia candidatura"}
-      </button>
-    </form>
+            {/* Link Esterni e Social (Griglia 3 Colonne) */}
+            <div className={styles.gridThreeColumns}>
+              <Input
+                label="Sito web / portfolio esterno"
+                type="url"
+                placeholder="https://..."
+                error={errors.website_url?.message}
+                {...register("website_url")}
+              />
+
+              <Input
+                label="Instagram"
+                type="url"
+                placeholder="https://instagram.com/..."
+                error={errors.social_links?.instagram?.message}
+                {...register("social_links.instagram")}
+              />
+
+              <Input
+                label="Behance"
+                type="url"
+                placeholder="https://behance.net/..."
+                error={errors.social_links?.behance?.message}
+                {...register("social_links.behance")}
+              />
+            </div>
+
+            {/* Statement Artistico */}
+            <Textarea
+              label="Statement artistico"
+              rows={4}
+              error={errors.statement?.message}
+              {...register("statement")}
+            />
+
+            {/* Selettore Categorie (Full Width) */}
+            <CategoryCheckboxSelect
+              categories={categories}
+              name="specialtyIds"
+              label="Specializzazioni"
+              error={errors.specialtyIds?.message as string | undefined}
+              control={methods.control}
+            />
+
+            {/* Uploader Immagini (Full Width) */}
+            <ImageUploader
+              label="Opere di portfolio (3–5 immagini)"
+              value={portfolioFiles}
+              onChange={(files) =>
+                setValue("portfolioSamples", files, { shouldValidate: true })
+              }
+              error={errors.portfolioSamples?.message as string | undefined}
+              minFiles={3}
+              maxFiles={5}
+            />
+          </div>
+        );
+      }}
+    </Form>
   );
 }

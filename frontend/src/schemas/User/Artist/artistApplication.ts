@@ -1,40 +1,91 @@
 import { z } from "zod";
 
-export type CategoryOption = {
-  id: string;
-  name: string;
-  parentName: string;
-};
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-const MAX_FILE_SIZE = 5 + 1024 * 1024; //5 mb
-const ACCEPTED_IMAGES_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-export const artistApplicationSchema = z.object({
+const socialLinksSchema = z
+  .object({
+    instagram: z
+      .string()
+      .trim()
+      .url("URL non valido")
+      .optional()
+      .or(z.literal("")),
+    behance: z
+      .string()
+      .trim()
+      .url("URL non valido")
+      .optional()
+      .or(z.literal("")),
+    facebook: z
+      .string()
+      .trim()
+      .url("URL non valido")
+      .optional()
+      .or(z.literal("")),
+    other: z.string().trim().url("URL non valido").optional().or(z.literal("")),
+  })
+  .partial()
+  .optional();
+
+const portfolioFileSchema = z
+  .instanceof(File, { message: "File non valido" })
+  .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), {
+    message: "Formato immagine non supportato (jpeg, png, webp)",
+  })
+  .refine((file) => file.size <= MAX_FILE_SIZE, {
+    message: "Il file supera i 5MB",
+  });
+
+export const ArtistApplicationSchema = z.object({
+  // ---- Campi destinati a artist_profiles ----
+  display_name: z
+    .string()
+    .trim()
+    .min(1, "Il nome d'arte è obbligatorio")
+    .max(255, "Il nome d'arte è troppo lungo"),
+
+  bio: z
+    .string()
+    .trim()
+    .max(2000, "La bio è troppo lunga")
+    .optional()
+    .or(z.literal("")),
+
+  website_url: z
+    .string()
+    .trim()
+    .url("Inserisci un URL valido")
+    .optional()
+    .or(z.literal("")),
+
+  studio_location: z
+    .string()
+    .trim()
+    .max(255, "Il campo è troppo lungo")
+    .optional()
+    .or(z.literal("")),
+
+  social_links: socialLinksSchema,
+
+  // ---- Campi destinati a artist_applications ----
   statement: z
     .string()
-    .min(100, "Racconta il tuo percorso in almeno 100 caratteri")
-    .max(2000, "Massimo 2000 caratteri"),
+    .trim()
+    .min(50, "Lo statement deve contenere almeno 50 caratteri")
+    .max(3000, "Lo statement è troppo lungo"),
 
+  // ---- Relazione artist_specialties (many-to-many via pivot) ----
   specialtyIds: z
-    .array(z.string().uuid())
-    .min(1, "Seleziona almeno una specializzazione")
-    .max(5, "Massimo 5 specializazzioni"),
+    .array(z.string().uuid("ID specializzazione non valido"))
+    .min(1, "Seleziona almeno una specializzazione"),
 
+  // ---- Upload portfolio ----
   portfolioSamples: z
-    .array(
-      z
-        .instanceof(File)
-        .refine(
-          (file) => file.size <= MAX_FILE_SIZE,
-          "Ogni immagine deve essere sotto i 5 MB",
-        )
-        .refine(
-          (file) => ACCEPTED_IMAGES_TYPES.includes(file.type),
-          "Formati accettati: JPEG, PNG, WEBP",
-        ),
-    )
-    .min(2, "Carica almeno 2 opere")
-    .max(5, "Massimo 5 opere"),
+    .array(portfolioFileSchema)
+    .min(3, "Carica almeno 3 opere")
+    .max(5, "Puoi caricare al massimo 5 opere"),
 });
 
-export type ArtistApplicationFormData = z.infer<typeof artistApplicationSchema>;
+export type ArtistApplicationFormData = z.infer<typeof ArtistApplicationSchema>;
