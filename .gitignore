@@ -1,0 +1,27 @@
+# MinIO
+backend/minio
+backend/data/
+
+# Node
+node_modules/
+
+# PHP
+vendor/
+
+# Environment
+.env
+.env.*
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentazione locale
+*.odt

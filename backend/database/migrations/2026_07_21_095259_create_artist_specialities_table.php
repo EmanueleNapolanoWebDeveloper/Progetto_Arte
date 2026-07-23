@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->unique(['artist_profile_id', 'category_id']);
+            $table->Index('category_id');
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('artist_specialities');
+        Schema::dropIfExists('artist_specialties');
     }
 };

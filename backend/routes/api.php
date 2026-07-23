@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\UserController;
+use App\Http\Controllers\User\Artists\ArtistApplicationController;
 use Illuminate\Support\Facades\Route;
 
 // Rotte di autenticazione
@@ -21,8 +22,15 @@ Route::get('categories/specialties', [CategoryController::class, 'specialties'])
 
 //Rotte di autenticazione protette
 Route::middleware('auth:sanctum')->group(function () {
+    // --->ROTTE DI AUTH
     Route::get('/user', [UserController::class, 'user']);
     Route::post('/logout', [UserController::class, 'logout']);
+
+    // --->ROTTE PER ARTIST APPLICATION
+    //creazione candidatura
+    Route::post('/artist-application', [ArtistApplicationController::class, 'store']);
+
+    
 });
 
 

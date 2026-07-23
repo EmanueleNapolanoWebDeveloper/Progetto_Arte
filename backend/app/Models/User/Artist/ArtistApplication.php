@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\User\Artist;
 
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ArtistApplication extends Model
 {
@@ -13,18 +14,15 @@ class ArtistApplication extends Model
 
     protected $fillable = [
         'user_id',
+        'previous_application_id',
         'status',
         'statement',
-        'portfolio_samples',
-        'specialties',
         'reviewed_by',
         'review_notes',
         'reviewed_at'
     ];
 
     protected $casts = [
-        'portfolio_samples' => 'array',
-        'specialties' => 'array',
         'reviewed_at' => 'datetime',
     ];
 
@@ -40,5 +38,16 @@ class ArtistApplication extends Model
     public function reviewer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
+    // Candidatura precedente (storico)
+    public function previousApplication(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'previous_application_id');
+    }
+
+    //candidature successive collegata a questa (previous application)
+    public function nextApplication(): HasMany {
+        return $this->hasMany(self::Class, 'previous_application_id');
     }
 }
