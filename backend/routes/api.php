@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\UserController;
 use App\Http\Controllers\User\Artists\ArtistApplicationController;
+use App\Http\Controllers\User\Artists\ArtistApplicationPortfolioController;
 use Illuminate\Support\Facades\Route;
 
 // Rotte di autenticazione
@@ -30,7 +31,11 @@ Route::middleware('auth:sanctum')->group(function () {
     //creazione candidatura
     Route::post('/artist-application', [ArtistApplicationController::class, 'store']);
 
-    
+    //genarazione rpesigned Urls
+    Route::post('/artist-application/{applicationId}/presigned-urls', [ArtistApplicationPortfolioController::class, 'getPresignedUrls']);
+
+    //conferma e salvataggio riferimenti su db
+    Route::post('/artist-application/{applicationId}/confirm-portfolio', [ArtistApplicationPortfolioController::class, 'confirmPortfolio']);
 });
 
 

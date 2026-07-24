@@ -24,9 +24,16 @@ function getCookie(name: string): string | null {
 async function ensureCsrfCookie() {
   if (getCookie("XSRF-TOKEN")) return;
 
-  await fetch(`${APP_URL}/sanctum/csrf-cookie`, {
+  const res = await fetch(`${APP_URL}/sanctum/csrf-cookie`, {
     credentials: "include",
   });
+
+  if (!res.ok) {
+    throw new ApiError(
+      "Impossibile inizializzare la sessione (CSRF cookie non ottenuto).",
+      res.status,
+    );
+  }
 }
 
 export async function apiFetch<TResponse>(

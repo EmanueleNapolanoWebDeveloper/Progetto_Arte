@@ -47,7 +47,14 @@ class ArtistApplication extends Model
     }
 
     //candidature successive collegata a questa (previous application)
-    public function nextApplication(): HasMany {
-        return $this->hasMany(self::Class, 'previous_application_id');
+    public function nextApplication(): HasMany
+    {
+        return $this->hasMany(self::class, 'previous_application_id');
+    }
+
+    //portfolio samples
+    public function portfolioSamples(): HasMany
+    {
+        return $this->hasMany(ArtistApplicationPortfolioItem::class, 'application_id');
     }
 }

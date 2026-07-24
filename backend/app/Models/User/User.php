@@ -2,13 +2,12 @@
 
 namespace App\Models\User;
 
-use App\Models\Admin\ArtistApplication;
+use App\Models\User\Artist\ArtistApplication;
 use App\Models\Auth\LoginHistory;
 use App\Models\Admin\Role;
 use App\Models\Auth\UserBan;
 use App\Models\Auth\UserSuspension;
-use App\Models\User\ArtistProfile;
-use Database\Factories\UserFactory;
+use App\Models\User\Artist\ArtistProfile;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;

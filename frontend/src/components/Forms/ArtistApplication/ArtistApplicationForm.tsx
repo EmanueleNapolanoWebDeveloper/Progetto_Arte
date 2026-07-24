@@ -11,8 +11,7 @@ import type { CategoryOption } from "@/src/types/Category/categoryTypes";
 import styles from "./artist_application.module.css";
 import { CategoryCheckboxSelect } from "./CategoryCheckboxSelect";
 import { ImageUploader } from "../../UI/ImageUploader/ImageUploader";
-import { buildArtistApplicationPayload } from "@/src/features/User/Artist/artistApplication.payload";
-import { apiFetch } from "@/src/lib/API/client";
+import { useArtistApplicationSubmit } from "@/src/features/User/Artist/Portfolios/hook.portfolio";
 
 type Props = {
   categories: CategoryOption[];
@@ -38,70 +37,12 @@ const defaultValues: ArtistApplicationFormData = {
   portfolioSamples: [],
 };
 
-// Funzione di test da passare al Form
-const handleSubmit = async (data: ArtistApplicationFormData) => {
-  console.log("=== 🎨 RICEVUTI DATI DALLA FORM (SERVER) ===");
-  console.log("Data:", data);
-
-  try {
-    //creazione payload
-    const payload = buildArtistApplicationPayload(data);
-
-    //invio payload
-    const appResponse = (await apiFetch)<{ data: { id: string } }>(
-      "/artist-application",
-      {
-        method: "POST",
-        body: JSON.stringify(payload),
-      },
-    );
-
-    //recupero ID di application
-    const applicationId = (await appResponse).data.id;
-    const files = data.portfolioSamples ?? [];
-
-    if (files.length > 0) {
-      const fileNames = files.map((file) => file.name);
-
-      const { urls } = await apiFetch<{
-        urls: { uploadUrl: string; fileKey: string }[];
-      }>(`/artist-application/${applicationId}/presigned-urls`, {
-        method: "POST",
-        body: JSON.stringify({ files: fileNames }),
-      });
-
-      //carichiamo file direttamente su minio
-      const uploadPromises = files.map((file, index) => {
-        const { uploadUrl } = urls[index];
-
-        return fetch(uploadUrl, {
-          method: "PUT",
-          headers: {
-            "Content-Type": file.type,
-          },
-          body: file,
-        });
-      });
-
-      await Promise.all(uploadPromises);
-
-      //conferma di upload completato
-      const uploadKeys = urls.map((url) => url.fileKey);
-      await apiFetch("artist-application/${applicationId}/confirm-portfolio", {
-        method: "POST",
-        body: JSON.stringify({ fileKeys: uploadKeys }),
-      });
-    }
-  } catch (error) {
-    console.error("Errore: ", error);
-  }
-};
-
 export function ArtistApplicationForm({
   categories = [],
   previousApplicationId,
 }: Props) {
-  // Prepariamo i defaultValues includendo l'eventuale ID della candidatura precedente
+  const { submit, phase, uploadProgress } = useArtistApplicationSubmit();
+
   const initialValues: ArtistApplicationFormData = {
     ...defaultValues,
     previous_application_id: previousApplicationId ?? null,
@@ -113,9 +54,7 @@ export function ArtistApplicationForm({
       defaultValues={initialValues}
       submitLabel="Invia candidatura"
       className={styles.form}
-      onSubmit={async (data) => {
-        await handleSubmit(data);
-      }}
+      onSubmit={submit}
     >
       {(methods) => {
         const {
@@ -129,12 +68,10 @@ export function ArtistApplicationForm({
 
         return (
           <div className={styles.formContainer}>
-            {/* Campo nascosto per l'eventuale ID candidatura precedente */}
             {previousApplicationId && (
               <input type="hidden" {...register("previous_application_id")} />
             )}
 
-            {/* Informazioni Personali / Nome d'arte */}
             <div className={styles.gridTwoColumns}>
               <Input
                 label="Nome d'arte"
@@ -150,7 +87,6 @@ export function ArtistApplicationForm({
               />
             </div>
 
-            {/* Ubicazione Dettagliata (Regione & Paese) */}
             <div className={styles.gridTwoColumns}>
               <Input
                 label="Regione / Provincia"
@@ -175,7 +111,6 @@ export function ArtistApplicationForm({
               {...register("bio")}
             />
 
-            {/* Link Esterni e Social */}
             <div className={styles.gridTwoColumns}>
               <Input
                 label="Sito web / portfolio esterno"
@@ -220,7 +155,6 @@ export function ArtistApplicationForm({
               />
             </div>
 
-            {/* Statement Artistico */}
             <Textarea
               label="Statement artistico"
               rows={4}
@@ -228,7 +162,6 @@ export function ArtistApplicationForm({
               {...register("statement")}
             />
 
-            {/* Selettore Categorie (Full Width) */}
             <CategoryCheckboxSelect
               categories={categories}
               name="specialtyIds"
@@ -237,7 +170,6 @@ export function ArtistApplicationForm({
               control={methods.control}
             />
 
-            {/* Uploader Immagini (Full Width) */}
             <ImageUploader
               label="Opere di portfolio (3–5 immagini)"
               value={portfolioFiles}
@@ -248,6 +180,19 @@ export function ArtistApplicationForm({
               minFiles={3}
               maxFiles={5}
             />
+
+            {phase === "creating-application" && (
+              <p className={styles.submitStatus}>Creazione candidatura...</p>
+            )}
+
+            {phase === "uploading-portfolio" && (
+              <p className={styles.submitStatus}>
+                Caricamento immagini portfolio
+                {uploadProgress
+                  ? ` (${uploadProgress.completed}/${uploadProgress.total})`
+                  : "..."}
+              </p>
+            )}
           </div>
         );
       }}

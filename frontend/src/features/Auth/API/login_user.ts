@@ -1,4 +1,4 @@
-import { apiFetch } from "@/src/lib/API/client";
+import { ApiError, apiFetch } from "@/src/lib/API/client";
 import { LoginFormType } from "@/src/types/Auth/Login";
 
 interface LoginResponse {
@@ -8,39 +8,27 @@ interface LoginResponse {
     username: string | null;
     email: string | null;
   };
-  status: number;
 }
 
 export async function loginUser(data: LoginFormType) {
   return apiFetch<LoginResponse>("/auth/login", {
     method: "POST",
+    credentials: "include",
     body: JSON.stringify(data),
   });
 }
 
 export async function fetchCurrentUser() {
-  const res = await apiFetch<LoginResponse>("/user", {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      Accept: "application/json",
-    },
-  });
-
-  //--->controllo status
-
-  //non autenticato
-  if (res.status === 401) {
-    return null;
+  try {
+    return await apiFetch<LoginResponse>("/user", {
+      method: "GET",
+    });
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      return null;
+    }
+    throw error;
   }
-
-  //errore nel recupero utente
-  if (res.status !== 200) {
-    throw new Error(`Errore nel recupero dell'utente: ${res.status}`);
-  }
-
-  //ritorno
-  return res;
 }
 
 export async function logoutUser() {

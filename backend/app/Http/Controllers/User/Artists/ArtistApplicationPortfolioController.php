@@ -16,6 +16,8 @@ class ArtistApplicationPortfolioController extends Controller
         return new S3Client([
             'version' => 'latest',
             'region' => config('filesystems.disks.s3.region'),
+            'endpoint' => config('filesystems.disks.s3.endpoint'),
+            'use_path_style_endpoint' => config('filesystems.disks.s3.use_path_style_endpoint'),
             'credentials' => [
                 'key' => config('filesystems.disks.s3.key'),
                 'secret' => config('filesystems.disks.s3.secret'),
@@ -74,8 +76,8 @@ class ArtistApplicationPortfolioController extends Controller
         $savedSamples = [];
         foreach ($request->input('fileKeys') as $index => $fileKey) {
             $savedSamples[] = $application->portfolioSamples()->create([
-                'file_path' => $fileKey,
-                'display_order' => $index,
+                'image_url' => $fileKey,
+                'sort_order' => $index,
             ]);
         }
 
